@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:hive/hive.dart';
+import 'package:musicplayer/app/data/model/song_model.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-
 
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
@@ -10,6 +12,24 @@ import 'package:permission_handler/permission_handler.dart';
 class TrackController extends GetxController {
   final OnAudioQuery audioQuery = OnAudioQuery();
   final AudioPlayer audioPlayer = AudioPlayer();
+
+   late Box<Music> favoritesBox;
+  late ValueNotifier<int> boxChangeListener;
+
+  // Hive box for storing favorite songs
+ 
+
+  @override
+  void onInit() async {
+    super.onInit();
+
+    // Initialize the Hive box for favorites
+ await Hive.openBox<Music>('favorites');
+    favoritesBox = Hive.box<Music>('favorites');
+
+    //Create the ValueNotifier and pass it to the FavoritesScreen
+     boxChangeListener = ValueNotifier<int>(0);
+  }
 
   Future<bool> checkPermission() async {
     var permissionStatus = await audioQuery.permissionsStatus();
@@ -27,6 +47,29 @@ class TrackController extends GetxController {
       uriType: UriType.EXTERNAL,
       ignoreCase: true,
     );
+  }
+
+  // Method to add a song to the favorites Hive box
+  void addToFavorites(SongModel song) {
+    try {
+      // Get the existing favorites or create a new one
+      Music favorites =
+          favoritesBox.get('favorites', defaultValue: Music(songs: []))!;
+
+      // Add the song to the favorites
+      favorites.songs.add(song);
+
+      // Save the updated favorites back to the Hive box
+      favoritesBox.put('favorites', favorites);
+      // Trigger a rebuild in the FavoritesScreen
+     boxChangeListener.value++;  
+      print("added");
+    } catch (e) {
+      // Handle exceptions, e.g., log the error or show a user-friendly message
+      print('Error adding song to favorites: $e');
+      // You can also rethrow the exception if needed
+      // rethrow;
+    }
   }
 
   Future<void> playSong(SongModel song) async {

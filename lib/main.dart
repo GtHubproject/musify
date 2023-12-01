@@ -32,8 +32,13 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(SongModelAdapter());
   Hive.registerAdapter(MusicAdapter()); 
+
 //playlist
+
 await Hive.openBox<Music>('musicBox');
+
+await Hive.openBox<Music>('favorites');
+
 //fav
 //await Hive.openBox<Music>('favorites');
    Get.put(PlaylistSelectionController());

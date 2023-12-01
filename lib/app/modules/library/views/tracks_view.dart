@@ -1,5 +1,6 @@
 // TracksView.dart
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -8,7 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TracksView extends StatefulWidget {
+   
+
   const TracksView({Key? key}) : super(key: key);
+
 
   @override
   _TracksViewState createState() => _TracksViewState();
@@ -44,6 +48,7 @@ class _TracksViewState extends State<TracksView> {
       _songs = songs;
     });
   }
+  
 
   Widget _buildTrackList() {
     return FutureBuilder<List<SongModel>>(
@@ -54,6 +59,7 @@ class _TracksViewState extends State<TracksView> {
           return ListView.builder(
             itemCount: _songs.length,
             itemBuilder: (context, index) {
+                 var song = _songs[index];
               return ListTile(
                 title: Text(_songs[index].title),
                 subtitle: Text(_songs[index].artist ?? "No Artist"),
@@ -86,9 +92,12 @@ class _TracksViewState extends State<TracksView> {
                                   IconButton(
                                     icon: Icon(Icons.favorite),
                                     onPressed: () {
+                                     final controller = Get.find<TrackController>();
+                                      // Add the current song to favorites
+                                    controller.addToFavorites(song);
                                       // Handle favorite icon pressed
-                                      Navigator.pop(
-                                          context); // Close the bottom sheet
+                                  //     Hive.box<SongModel>('favoritesBox').put(song.id, song);
+                                      Navigator.pop(context); // Close the bottom sheet
                                     },
                                   ),
                                   IconButton(
