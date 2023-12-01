@@ -1,7 +1,11 @@
 // TracksView.dart
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class TracksView extends StatefulWidget {
   const TracksView({Key? key}) : super(key: key);
@@ -11,56 +15,39 @@ class TracksView extends StatefulWidget {
 }
 
 class _TracksViewState extends State<TracksView> {
-  //late Box<PlaylistModel> playlistBox;
-
-  final OnAudioQuery _audioQuery = OnAudioQuery();
-  bool _hasPermission = false;
-  late AudioPlayer _audioPlayer;
+  final TrackController trackController = Get.put(TrackController());
   List<SongModel> _songs = [];
-  bool _isPlaying = false;
-  SongModel? _currentSong;
+  bool _hasPermission = false;
 
   @override
   void initState() {
     super.initState();
-    _audioPlayer = AudioPlayer();
     checkAndRequestPermissions();
-    _initAudioPlayer();
-    // playlistBox = Hive.box<PlaylistModel>('playlists');
-  }
-
-  void _initAudioPlayer() {
-    _audioPlayer.playerStateStream.listen((playerState) {
-      setState(() {
-        _isPlaying = playerState.playing;
-      });
-    });
   }
 
   Future<void> checkAndRequestPermissions({bool retry = false}) async {
-    bool hasPermission = await _audioQuery.checkAndRequest(retryRequest: retry);
+    bool hasPermission = await trackController.checkPermission();
     setState(() {
       _hasPermission = hasPermission;
     });
+
+    if (_hasPermission) {
+      loadSongs();
+    } else if (retry) {
+      // Handle retry logic if needed
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: _hasPermission ? _buildTrackList() : noAccessToLibraryWidget(),
-      ),
-    );
+  Future<void> loadSongs() async {
+    List<SongModel> songs = await trackController.querySongs();
+    setState(() {
+      _songs = songs;
+    });
   }
 
   Widget _buildTrackList() {
     return FutureBuilder<List<SongModel>>(
-      future: _audioQuery.querySongs(
-        sortType: null,
-        orderType: OrderType.ASC_OR_SMALLER,
-        uriType: UriType.EXTERNAL,
-        ignoreCase: true,
-      ),
+      future: trackController.querySongs(),
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           _songs = snapshot.data!;
@@ -71,19 +58,19 @@ class _TracksViewState extends State<TracksView> {
                 title: Text(_songs[index].title),
                 subtitle: Text(_songs[index].artist ?? "No Artist"),
                 leading: QueryArtworkWidget(
-                  controller: _audioQuery,
+                  controller: trackController.audioQuery,
                   id: _songs[index].id,
                   type: ArtworkType.AUDIO,
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
-                      icon: Icon(Icons.favorite), // Favorite Icon
-                      onPressed: () {
-                        // Logic for handling the favorite action
-                      },
-                    ),
+                    // IconButton(
+                    //   icon: Icon(Icons.favorite), // Favorite Icon
+                    //   onPressed: () {
+                    //     // Logic for handling the favorite action
+                    //   },
+                    // ),
                     IconButton(
                       icon: Icon(Icons.more_vert), // More Vert Icon
                       onPressed: () {
@@ -91,24 +78,31 @@ class _TracksViewState extends State<TracksView> {
                           context: context,
                           builder: (BuildContext context) {
                             return Container(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  ListTile(
-                                    leading: Icon(Icons.edit),
-                                    title: Text('Rename'),
-                                    onTap: () {
-                                      // _renameSong(_songs[index]); // Call the method to handle renaming
+                              padding: EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.favorite),
+                                    onPressed: () {
+                                      // Handle favorite icon pressed
                                       Navigator.pop(
                                           context); // Close the bottom sheet
-                                      // Close the bottom sheet
                                     },
                                   ),
-                                  ListTile(
-                                    leading: Icon(Icons.playlist_add),
-                                    title: Text('Add to Playlist'),
-                                    onTap: () {
-                                      // Logic for adding to playlist
+                                  IconButton(
+                                    icon: Icon(Icons.add),
+                                    onPressed: () {
+                                      // Handle add icon pressed
+                                      Navigator.pop(
+                                          context); // Close the bottom sheet
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      // Handle delete icon pressed
                                       Navigator.pop(
                                           context); // Close the bottom sheet
                                     },
@@ -136,9 +130,7 @@ class _TracksViewState extends State<TracksView> {
   }
 
   void _showBottomMediaBar(SongModel song) {
-    _currentSong = song;
-
-    bool isInitiallyPlaying = _audioPlayer.playing;
+    bool isInitiallyPlaying = trackController.audioPlayer.playing;
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -162,7 +154,7 @@ class _TracksViewState extends State<TracksView> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   QueryArtworkWidget(
-                    controller: _audioQuery,
+                    controller: trackController.audioQuery,
                     id: song.id,
                     type: ArtworkType.AUDIO,
                   ),
@@ -186,8 +178,8 @@ class _TracksViewState extends State<TracksView> {
                         isInitiallyPlaying ? Icons.pause : Icons.play_arrow),
                     onPressed: () {
                       isInitiallyPlaying
-                          ? _audioPlayer.pause()
-                          : _audioPlayer.play();
+                          ? trackController.audioPlayer.pause()
+                          : trackController.audioPlayer.play();
                       setState(() {
                         isInitiallyPlaying = !isInitiallyPlaying;
                       });
@@ -207,14 +199,7 @@ class _TracksViewState extends State<TracksView> {
       },
     );
 
-    _playSong(song);
-  }
-
-  Future<void> _playSong(SongModel song) async {
-    _currentSong = song;
-    await _audioPlayer.stop();
-    await _audioPlayer.setUrl(song.data);
-    await _audioPlayer.play();
+    trackController.playSong(song);
   }
 
   Widget noAccessToLibraryWidget() {
@@ -229,6 +214,15 @@ class _TracksViewState extends State<TracksView> {
             child: const Text("Allow"),
           ),
         ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: _hasPermission ? _buildTrackList() : noAccessToLibraryWidget(),
       ),
     );
   }

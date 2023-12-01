@@ -61,7 +61,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PLAYLISTS,
-      page: () => PlaylistsView(),
+      page: () => PlaylistDisplayView(),
       binding: PlaylistsBinding(),
     ),
 

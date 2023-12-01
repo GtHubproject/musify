@@ -2,35 +2,36 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 
+import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:on_audio_query/on_audio_query.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 class TrackController extends GetxController {
-  final audioQuery = OnAudioQuery();
- // final AudioPlayer = AudioPlayer();
+  final OnAudioQuery audioQuery = OnAudioQuery();
+  final AudioPlayer audioPlayer = AudioPlayer();
 
-  // final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-
-    //checkPermission();
+  Future<bool> checkPermission() async {
+    var permissionStatus = await audioQuery.permissionsStatus();
+    if (permissionStatus == PermissionStatus.granted) {
+      return true;
+    } else {
+      return await audioQuery.permissionsRequest();
+    }
   }
 
-  // checkPermission() async {
-  //   var prmsn = await Permission.storage.request();
-  //   if (prmsn.isGranted) {
-  //   } else {
-  //     checkPermission();
-  //   }
-  // }
-
-  @override
-  void onReady() {
-    super.onReady();
+  Future<List<SongModel>> querySongs() async {
+    return audioQuery.querySongs(
+      sortType: null,
+      orderType: OrderType.ASC_OR_SMALLER,
+      uriType: UriType.EXTERNAL,
+      ignoreCase: true,
+    );
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  Future<void> playSong(SongModel song) async {
+    await audioPlayer.stop();
+    await audioPlayer.setUrl(song.data);
+    await audioPlayer.play();
   }
-
-  //void increment() => count.value++;
 }

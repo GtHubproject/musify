@@ -1,54 +1,30 @@
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:musicplayer/app/data/model/song_model.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-class PlaylistsController extends GetxController {
+class PlaylistDisplayController extends GetxController {
+  final musicBox = Hive.box<Music>('musicBox');
 
-//  Rx<Playlist> selectedPlaylist = Playlist(playlistName: '', songPaths: []).obs;
-
-//   // Method to set the selected playlist
-//   void setSelectedPlaylist(Playlist playlist) {
-//     selectedPlaylist.value = playlist;
-//   }
-
-
-    // Placeholder for the selected songs
-  RxList<SongModel> selectedSongs = <SongModel>[].obs;
-
-  // Method to get selected songs
-  List<SongModel> getSelectedSongs() {
-    return selectedSongs.toList();
+  Future<List<SongModel>> getSongsForPlaylist(String playlistName) async {
+    if (musicBox.containsKey(playlistName)) {
+      final music = musicBox.get(playlistName) as Music;
+      return music.songs;
+    } else {
+      _printError('Error: Playlist not found.');
+      _printAvailablePlaylists();
+      return [];
+    }
   }
-//  List<SongModel> selectedSongs = [];
 
-//   void toggleSelectedSong(SongModel song) {
-//     if (selectedSongs.contains(song)) {
-//       selectedSongs.remove(song);
-//     } else {
-//       selectedSongs.add(song);
-//     }
+  void _printError(String message) {
+    print(message);
+  }
 
-//     // Notify listeners about the change
-//     update();
-//   }
-
-  //TODO: Implement PlaylistsController
-
-  // final count = 0.obs;
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  // }
-
-  // @override
-  // void onReady() {
-  //   super.onReady();
-  // }
-
-  // @override
-  // void onClose() {
-  //   super.onClose();
-  // }
-
-  // void increment() => count.value++;
+  void _printAvailablePlaylists() {
+    print('Available Playlists:');
+    musicBox.keys.forEach((key) {
+      print('- $key');
+    });
+  }
 }

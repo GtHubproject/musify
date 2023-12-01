@@ -8,8 +8,8 @@ class PlaylistsBinding extends Bindings {
     Get.lazyPut<PlaylistSelectionController>(
       () => PlaylistSelectionController(),
     );
-    Get.lazyPut<PlaylistsController>(
-      () => PlaylistsController(),
+    Get.lazyPut<PlaylistDisplayController>(
+      () => PlaylistDisplayController(),
     );
   }
 }

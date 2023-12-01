@@ -12,65 +12,77 @@ import '../controllers/playlists_controller.dart';
 
 import 'package:musicplayer/app/data/model/songmodel.dart' as MyAppSongModel;
 
-class  PlaylistsView extends GetView<PlaylistsController> {
-   PlaylistsView({Key? key}) : super(key: key);
-   @override
+class PlaylistDisplayView extends GetView<PlaylistDisplayController> {
+  PlaylistDisplayView({Key? key}) : super(key: key);
+
+  @override
   Widget build(BuildContext context) {
-
-    final OnAudioQuery _audioQuery = OnAudioQuery();
-    return Scaffold(
-      
-      body:_buildSongList(),
+      return Scaffold(
+        appBar: AppBar(
+        title: Text('Detailed Playlist'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              Get.toNamed('/selectplaylist');
+            },
+          ),
+          PopupMenuButton(
+            icon: Icon(Icons.more_vert),
+            itemBuilder: (BuildContext context) {
+              return <PopupMenuEntry>[
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text('Rename'),
+                  ),
+                  value: 'rename',
+                ),
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: Icon(Icons.delete),
+                    title: Text('Delete'),
+                  ),
+                  value: 'delete',
+                ),
+              ];
+            },
+            onSelected: (value) {
+              if (value == 'rename') {
+                showRenameDialog(context);
+              } else if (value == 'delete') {
+                showDeleteDialog(context);
+              }
+            },
+          ),
+        ],
+      ),
+      body:FutureBuilder<List<SongModel>>(
+  future: controller.getSongsForPlaylist('YourPlaylistName'),
+  builder: (context, snapshot) {
+    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+      List<SongModel> songs = snapshot.data!;
+      return ListView.builder(
+        itemCount: songs.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(songs[index].title),
+            subtitle: Text(songs[index].artist ?? "No Artist"),
+            // Add any other UI elements you need
+          );
+        },
+      );
+    } else {
+      return Center(child: Text("No songs found in the playlist!"));
+    }
+  },
+),
+ 
+    
     );
   }
-  Widget _buildSongList() {
-    return ValueListenableBuilder<Box<Playlist>>(
-      valueListenable: Boxes.getPlaylist().listenable(),
-      builder: (BuildContext context, box, _) {
-        // Assuming you have a selectedPlaylist variable in your controller
-    //    Playlist selectedPlaylist = controller.selectedPlaylist.value;
-
-        return ListView.builder(
-        //  itemCount: selectedPlaylist.songPaths.length,
-          itemBuilder: (context, index) {
-
-            
-            // You need to fetch SongModel based on songPaths[index]
-          
-            // Replace the SongModel fetch logic with your actual implementation
-         //   SongModel song = _fetchSongModel(selectedPlaylist.songPaths[index]);
-
-            // return ListTile(
-            //   title: Text(song.title),
-            //   subtitle: Text(song.artist ?? "No Artist"),
-            //   // Add other necessary UI elements for the song
-            // );
-          },
-        );
-      },
-    );
-  }
 
 
 
-  // Replace this with your actual implementation to fetch SongModel
-   
-  // SongModel _fetchSongModel(String songPath) {
-  //   List<SongModel> songs = _audioQuery.querySongs(
-  //     sortType: null,
-  //     orderType: OrderType.ASC_OR_SMALLER,
-  //     uriType: UriType.EXTERNAL,
-  //     ignoreCase: true,
-  //   ) as List<SongModel>;
-
-  //   SongModel? foundSong = songs.firstWhere(
-  //     (song) => song.data == songPath,
-  //     orElse: () => SongModel(title: 'Unknown Song', artist: 'Unknown Artist', data: ''),
-  //   );
-
-   // return foundSong!;
-  }
   
-
-
-
+}
