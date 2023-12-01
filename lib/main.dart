@@ -22,6 +22,9 @@ class AppBindings extends Bindings {
     Get.lazyPut<PlaylistsController>(() => PlaylistsController());
 
 
+
+
+
  Get.put<AudioPlayer>(AudioPlayer()); 
     // Add other bindings as needed
   }
