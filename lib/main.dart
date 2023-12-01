@@ -25,6 +25,8 @@ class AppBindings extends Bindings {
 
 
 
+
+
  Get.put<AudioPlayer>(AudioPlayer()); 
     // Add other bindings as needed
   }
