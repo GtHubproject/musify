@@ -4,7 +4,9 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:musicplayer/app/data/model/song_model.dart';
 import 'package:musicplayer/app/data/model/songmodel.dart';
+import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
 import 'package:musicplayer/app/modules/home/controllers/home_controller.dart';
+import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:musicplayer/app/modules/playlists/controllers/playlist_selection_controller_controller.dart';
 import 'package:musicplayer/app/modules/playlists/controllers/playlists_controller.dart';
 import 'package:musicplayer/app/modules/searchbar/controllers/searchbar_controller.dart';
@@ -17,10 +19,15 @@ class AppBindings extends Bindings {
     // Searchbar bindings
     Get.lazyPut<SearchbarController>(() => SearchbarController());
 
+
     // Playlist bindings
     Get.lazyPut<PlaylistSelectionController>(() => PlaylistSelectionController());
     Get.lazyPut<PlaylistDisplayController>(() => PlaylistDisplayController());
     Get.lazyPut<HomeController>(() => HomeController());
+     Get.lazyPut<HomeController>(() => HomeController());
+      Get.lazyPut<TrackController>(() => TrackController());
+
+     Get.lazyPut< FavouritesController>(() =>  FavouritesController());
    //for tracksview to play song
    Get.put<AudioPlayer>(AudioPlayer()); 
     // Add other bindings as needed

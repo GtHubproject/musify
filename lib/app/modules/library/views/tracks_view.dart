@@ -137,7 +137,7 @@ class _TracksViewState extends State<TracksView> {
       },
     );
   }
-
+//miniplayer
   void _showBottomMediaBar(SongModel song) {
     bool isInitiallyPlaying = trackController.audioPlayer.playing;
     showModalBottomSheet(
@@ -236,3 +236,8 @@ class _TracksViewState extends State<TracksView> {
     );
   }
 }
+
+//seperate updated
+
+
+

@@ -17,7 +17,6 @@ class TrackController extends GetxController {
   late ValueNotifier<int> boxChangeListener;
 
   // Hive box for storing favorite songs
- 
 
   @override
   void onInit() async {
@@ -62,7 +61,7 @@ class TrackController extends GetxController {
       // Save the updated favorites back to the Hive box
       favoritesBox.put('favorites', favorites);
       // Trigger a rebuild in the FavoritesScreen
-     boxChangeListener.value++;  
+     boxChangeListener.value++;
       print("added");
     } catch (e) {
       // Handle exceptions, e.g., log the error or show a user-friendly message
