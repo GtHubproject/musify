@@ -7,6 +7,7 @@ import 'package:musicplayer/app/modules/library/views/library_view.dart';
 import 'package:musicplayer/app/modules/profile/views/profile_view.dart';
 import 'package:musicplayer/app/modules/searchbar/views/searchbar_view.dart';
 import 'package:musicplayer/constants/colors.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 import '../controllers/bottomnavigationbar_controller.dart';
 
@@ -21,7 +22,7 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
     HomeView(),
     SearchbarView(),
     const LibraryView(),
-   FavouritesView(),
+    FavouritesView(),
     //const ProfileView(),
   ];
   @override
@@ -97,71 +98,75 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
 }
 
 class YourWidgetAboveBottomNav extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
+    // Get reference to the BottomnavigationbarController
+    final bottomnavigationbarController =
+        Get.find<BottomnavigationbarController>();
     // Your widget content goes here
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        
         height: 70,
         decoration: BoxDecoration(
-           color: Color.fromARGB(255, 237, 96, 31), // Set the color as needed
+          color: Color.fromARGB(255, 237, 96, 31), // Set the color as needed
           // boxShadow: [
           //   BoxShadow(
-              // color: Colors.grey.withOpacity(0.5),
-              // spreadRadius: 5,
-              // blurRadius: 7,
-              //  offset: const Offset(0, 10),
+          // color: Colors.grey.withOpacity(0.5),
+          // spreadRadius: 5,
+          // blurRadius: 7,
+          //  offset: const Offset(0, 10),
           //   ),
           // ],
-        ), 
-         padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // QueryArtworkWidget(
-          // //  controller: controller.audioQuery,
-          
-          //   type: ArtworkType.AUDIO, id: ,
-          // ),
-          SizedBox(width: 8.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                "song",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  " Artist",
-                  style: TextStyle(fontSize: 14),
-                ),
-              ],
+        ),
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            //  QueryArtworkWidget(
+            //     controller: trackController.audioQuery,
+            //     id: bottomnavigationbarController.currentSong.value?.id ?? "",
+            //     type: ArtworkType.AUDIO,
+            //   ),
+            SizedBox(width: 8.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    bottomnavigationbarController.currentSong.value?.title ??
+                        "No Song",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    bottomnavigationbarController.currentSong.value?.artist ??
+                        "No Artist",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(width: 8.0),
-          IconButton(
-            icon: Icon(
-              Icons.pause,
+            SizedBox(width: 8.0),
+            IconButton(
+              icon: Icon(
+                bottomnavigationbarController.isPlaying.value
+                    ? Icons.pause
+                    : Icons.play_arrow,
+              ),
+              onPressed: () {
+                print("Play/Pause button pressed");
+                bottomnavigationbarController.togglePlayPause();
+              },
             ),
-            onPressed: () {
-            
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.skip_next),
-            onPressed: () {
-              // Logic to skip to the next track
-             
-            },
-          ),
-        ],
-      ),
-      
+            IconButton(
+              icon: const Icon(Icons.skip_next),
+              onPressed: () {
+                // Logic to skip to the next track
+              },
+            ),
+          ],
+        ),
       ),
     );
-  } 
+  }
 }

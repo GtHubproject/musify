@@ -4,6 +4,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:musicplayer/app/data/model/song_model.dart';
 import 'package:musicplayer/app/data/model/songmodel.dart';
+import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
 import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
 import 'package:musicplayer/app/modules/home/controllers/home_controller.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
@@ -18,7 +19,7 @@ class AppBindings extends Bindings {
   void dependencies() {
     // Searchbar bindings
     Get.lazyPut<SearchbarController>(() => SearchbarController());
-
+ Get.lazyPut<BottomnavigationbarController>(() => BottomnavigationbarController());
 
     // Playlist bindings
     Get.lazyPut<PlaylistSelectionController>(() => PlaylistSelectionController());

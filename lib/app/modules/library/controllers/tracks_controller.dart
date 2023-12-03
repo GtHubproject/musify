@@ -15,7 +15,10 @@ class TrackController extends GetxController {
 
    late Box<Music> favoritesBox;
   late ValueNotifier<int> boxChangeListener;
+  //deelte song
+ List<SongModel> _songs = [];
 
+List<SongModel> get songs => _songs;
   // Hive box for storing favorite songs
 
   @override
@@ -76,4 +79,26 @@ class TrackController extends GetxController {
     await audioPlayer.setUrl(song.data);
     await audioPlayer.play();
   }
+
+
+Future<void> deleteSong(String songId) async {
+  print('Deleting song with ID: $songId');
+
+  // Assuming there is no direct method to delete by ID
+  // Fetch the updated list of songs excluding the one to be deleted
+  List<SongModel> updatedSongs = await querySongs();
+  updatedSongs.removeWhere((song) => song.id == songId);
+
+  // Update the local list of songs
+  _songs = updatedSongs;
+
+  // Trigger a rebuild
+  update();
+
+  print('Song deleted. Songs after deletion: $_songs');
+}
+
+
+
+  
 }
