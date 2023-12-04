@@ -78,42 +78,56 @@ class HomeView extends GetView<HomeController> {
                   'Playlists',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-               IconButton(
-  icon: const Icon(
-    Icons.add_circle,
-    size: 50,
-    color: Colors.white,
-  ),
-  onPressed: () {
-    showDialog(
-      context: context,
-      builder: (context) {
-        String playlistName = '';
-        return AlertDialog(
-          title: Text('Create Playlist'),
-          content: TextField(
-            onChanged: (value) => playlistName = value,
-            decoration: InputDecoration(labelText: 'Playlist Name'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Add your validation if needed
-                controller.createPlaylist(playlistName, []);
-                Navigator.pop(context);
-              },
-              child: Text('Create'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
+
+                IconButton(
+  icon: const Icon(Icons.add_circle, size: 50, color: Colors.white),
+  onPressed: () async {
+    // Show a dialog to get the playlist name
+   // String? playlistName = await _getPlaylistNameDialog(context);
+
+   // if (playlistName != null && playlistName.isNotEmpty) {
+      // Create the playlist
+      showCreatePlaylistDialog(context);
+   // }
   },
 ),
+
+//                IconButton(
+//   icon: const Icon(
+//     Icons.add_circle,
+//     size: 50,
+//     color: Colors.white,
+//   ),
+//   onPressed: () {
+//     showDialog(
+//       context: context,
+//       builder: (context) {
+//         String playlistName = '';
+//         return AlertDialog(
+//           title: Text('Create Playlist'),
+//           content: TextField(
+//             onChanged: (value) => playlistName = value,
+//             decoration: InputDecoration(labelText: 'Playlist Name'),
+//           ),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 // Add your validation if needed
+//                 controller.createPlaylist(playlistName, []);
+//                 Navigator.pop(context);
+//               },
+//               child: Text('Create'),
+//             ),
+//             TextButton(
+//               onPressed: () => Navigator.pop(context),
+//               child: Text('Cancel'),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   },
+// ),
 
               ],
               // Future createPlaylist(String playlistname){
@@ -122,103 +136,107 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
 
+
+
+
 //playlist display
 
 
-        Expanded(
-            child: ValueListenableBuilder(
-              valueListenable: controller.musicBox.listenable(),
-              builder: (context, Box<Music> box, _) {
-                return SizedBox( height: 100,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: box.length,
-                    itemBuilder: (context, index) {
-                      final playlistName = box.keyAt(index);
+// Playlist display
+  Expanded(
+    child: ValueListenableBuilder(
+      valueListenable: controller.musicBox.listenable(),
+      builder: (context, musicBox, child) {
+        return SizedBox(
+          height: 100,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: musicBox.length,
+            itemBuilder: (context, index) {
+              String playlistName = musicBox.keyAt(index);
 
-                        return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Get.toNamed('/playlistsdetail',);
-                              },
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.asset('assets/images.jpeg',
-                                    height: 100, width: 150),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              playlistName,  
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      );
-                      // return GestureDetector(
-                      //   onTap: () {
-                      //     // Add functionality to navigate or display playlist details
-                      //   },
-                      //   child: Container(
-                      //     margin: EdgeInsets.all(8.0),
-                      //     padding: EdgeInsets.all(16.0),
-                      //     decoration: BoxDecoration(
-                      //       border: Border.all(),
-                      //       borderRadius: BorderRadius.circular(10.0),
-                      //     ),
-                      //     child: Text(playlistName),
-                      //   ),
-                      // );
-                    },
-                  ),
-                );
-              },
-            ),
+              // Retrieve the playlist from the box, handle null case
+              Music? playlistNullable = musicBox.get(playlistName);
+              Music playlist = playlistNullable ?? Music(songs: []);
+
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // Navigate to the PlaylistDisplayView with the selected playlist name
+                        Get.toNamed('/playlistsdetail', arguments: {'playlistName': playlistName});
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset('assets/images.jpeg', height: 100, width: 150),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      playlistName,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
+        );
+      },
+    ),
+  ),
 
-          // ValueListenableBuilder<Box<Playlist>>(
-          //     valueListenable:  Boxes.getPlaylist().listenable(),
-          //     builder: (BuildContext context, box, _) {
-          //       return SizedBox(
-          //         height: 150,
-          //         child: ListView.builder(
-          //           scrollDirection: Axis.horizontal,
-          //           itemCount:box.length,
-          //           itemBuilder: (context, index) {
 
-          //               Playlist playlist = box.getAt(index)!; // Assume PlaylistModel is the Hive model class
 
-          //             return Padding(
-          //               padding: const EdgeInsets.all(8.0),
-          //               child: Column(
-          //                 crossAxisAlignment: CrossAxisAlignment.center,
-          //                 children: [
-          //                   GestureDetector(
-          //                     onTap: () {
-          //                       Get.toNamed('/playlistsdetail',arguments: playlist.playlistName);
-          //                     },
-          //                     child: ClipRRect(
-          //                       borderRadius: BorderRadius.circular(12),
-          //                       child: Image.asset('assets/images.jpeg',
-          //                           height: 100, width: 150),
-          //                     ),
-          //                   ),
-          //                   const SizedBox(height: 8),
-          //                   Text(
-          //                     playlist.playlistName,// Replace with your playlist title
-          //                     style: TextStyle(fontSize: 16),
-          //                   ),
-          //                 ],
-          //               ),
-          //             );
-          //           },
-          //         ),
-          //       );
-          //     }),
+        // Expanded(
+        //     child: ValueListenableBuilder(
+        //       valueListenable: controller.musicBox.listenable(),
+        //       builder: (context, Box<Music> box, _) {
+        //         return SizedBox( height: 100,
+        //           child: ListView.builder(
+        //             scrollDirection: Axis.horizontal,
+        //             itemCount: box.length,
+        //             itemBuilder: (context, index) {
+        //               final playlistName = box.keyAt(index);
+
+        //                 return Padding(
+        //                 padding: const EdgeInsets.all(8.0),
+        //                 child: Column(
+        //                   crossAxisAlignment: CrossAxisAlignment.center,
+        //                   children: [
+        //                     GestureDetector(
+        //                       onTap: () {
+
+                                  
+
+        //                         Get.toNamed('/playlistsdetail',parameters: {'playlistName': playlistName});
+        //                       },
+        //                       child: ClipRRect(
+        //                         borderRadius: BorderRadius.circular(12),
+        //                         child: Image.asset('assets/images.jpeg',
+        //                             height: 100, width: 150),
+        //                       ),
+        //                     ),
+        //                     const SizedBox(height: 8),
+        //                     Text(
+        //                       playlistName,  
+        //                       style: TextStyle(fontSize: 16),
+        //                     ),
+        //                   ],
+        //                 ),
+        //               );
+                     
+        //             },
+        //           ),
+        //         );
+        //       },
+        //     ),
+        //   ),
+
+          
 
           //----Recently played--- //
 
@@ -258,6 +276,44 @@ class HomeView extends GetView<HomeController> {
       ),
     ); //future
   }
+
+
+
+ Future<void> showCreatePlaylistDialog(BuildContext context) async {
+    String playlistName = "";
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Create Playlist"),
+          content: TextField(
+            onChanged: (value) {
+              playlistName = value;
+            },
+            decoration: InputDecoration(labelText: "Playlist Name"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (playlistName.isNotEmpty) {
+                  await controller.createPlaylist(playlistName);
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text('Create'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }
 
 //playlistDialog

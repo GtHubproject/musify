@@ -95,7 +95,7 @@ class _TracksViewState extends State<TracksView> {
                                     },
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.add),
+                                    icon: Icon(Icons.edit),
                                     onPressed: () {
                                       // Handle add icon pressed
 
@@ -198,6 +198,17 @@ class _TracksViewState extends State<TracksView> {
       },
     );
   }
+
+
+
+
+
+
+
+//rename
+
+
+
 
 //miniplayer
   void _showBottomMediaBar(SongModel song) {

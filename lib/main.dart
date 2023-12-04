@@ -41,14 +41,14 @@ void main() async {
   Hive.registerAdapter(SongModelAdapter());
   Hive.registerAdapter(MusicAdapter()); 
 
-//playlist
-
+//playlist hive box
 await Hive.openBox<Music>('musicBox');
 
+//fav hive box
 await Hive.openBox<Music>('favorites');
 
-//fav
-//await Hive.openBox<Music>('favorites');
+
+
    Get.put(PlaylistSelectionController());
    runApp(MyApp());
 }
