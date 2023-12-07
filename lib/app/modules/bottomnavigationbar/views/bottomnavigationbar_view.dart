@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:marquee/marquee.dart';
 import 'package:musicplayer/app/modules/favourites/views/favourites_view.dart';
 import 'package:musicplayer/app/modules/home/views/home_view.dart';
+import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:musicplayer/app/modules/library/views/library_view.dart';
 import 'package:musicplayer/app/modules/profile/views/profile_view.dart';
 import 'package:musicplayer/app/modules/searchbar/views/searchbar_view.dart';
@@ -41,7 +43,7 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
               bottom: 4, // Adjust the value as needed
               left: 0,
               right: 0,
-              child: YourWidgetAboveBottomNav(),
+              child: MiniPlayer(),
             ),
           ],
         ),
@@ -97,74 +99,96 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
   }
 }
 
-class YourWidgetAboveBottomNav extends StatelessWidget {
+class MiniPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Get reference to the BottomnavigationbarController
-    final bottomnavigationbarController =
-        Get.find<BottomnavigationbarController>();
-    // Your widget content goes here
+    final BottomnavigationbarController bottomController = Get.find();
+    final trackController = Get.find<TrackController>();
+    final currentSong = bottomController.currentSong.value;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 237, 96, 31), // Set the color as needed
-          // boxShadow: [
-          //   BoxShadow(
-          // color: Colors.grey.withOpacity(0.5),
-          // spreadRadius: 5,
-          // blurRadius: 7,
-          //  offset: const Offset(0, 10),
-          //   ),
-          // ],
-        ),
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            //  QueryArtworkWidget(
-            //     controller: trackController.audioQuery,
-            //     id: bottomnavigationbarController.currentSong.value?.id ?? "",
-            //     type: ArtworkType.AUDIO,
-            //   ),
-            SizedBox(width: 8.0),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    bottomnavigationbarController.currentSong.value?.title ??
-                        "No Song",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    bottomnavigationbarController.currentSong.value?.artist ??
-                        "No Artist",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
+      child: SingleChildScrollView(
+        child: GestureDetector(
+          onTap: () {
+           // bottomController.navigateToFullPlayer();
+          },
+          child: Container(
+            height: 70,
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 237, 96, 31),
             ),
-            SizedBox(width: 8.0),
-            IconButton(
-              icon: Icon(
-                bottomnavigationbarController.isPlaying.value
-                    ? Icons.pause
-                    : Icons.play_arrow,
-              ),
-              onPressed: () {
-                print("Play/Pause button pressed");
-                bottomnavigationbarController.togglePlayPause();
-              },
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    currentSong != null
+                        ? QueryArtworkWidget(
+                            controller: trackController.audioQuery,
+                            id: currentSong.id,
+                            type: ArtworkType.AUDIO,
+                          )
+                        : Container(),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 20,
+                            child: Marquee(
+                              text: currentSong != null
+                                  ? 'Now Playing: ${currentSong.title}'
+                                  : 'No song playing',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Text(
+                            currentSong != null
+                                ? 'Artist: ${currentSong.artist ?? "Unknown"}'
+                                : '',
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(bottomController.audioPlayer.playing
+                          ? Icons.pause
+                          : Icons.play_arrow),
+                      onPressed: () {
+                        if (bottomController.audioPlayer.playing) {
+                          bottomController.pauseSong();
+                        } else {
+                          bottomController.audioPlayer.play();
+                        }
+                        bottomController.update();
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.stop),
+                      onPressed: () {
+                        bottomController.stopSong();
+                        bottomController.update();
+                      },
+                    ),
+                  ],
+                ),
+                Expanded(
+                  flex: 2,
+                  child: currentSong != null
+                      ? LinearProgressIndicator(
+                          value: currentSong.duration?.toDouble() ?? 0.0,
+                          backgroundColor: Colors.grey,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Color.fromARGB(255, 213, 199, 199),
+                          ),
+                          minHeight: 0.001,
+                        )
+                      : Container(),
+                ),
+              ],
             ),
-            IconButton(
-              icon: const Icon(Icons.skip_next),
-              onPressed: () {
-                // Logic to skip to the next track
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -27,41 +27,77 @@ import 'package:on_audio_query/on_audio_query.dart';
 
  // Replace with the actual path to your SongModel class
 
+
+//new ourrr
+
+
+// class SearchbarController extends GetxController {
+//   late AudioPlayer _audioPlayer;
+//   RxList<SongModel> searchResults = <SongModel>[].obs;
+//   SongModel? currentSong;
+  
+//   static SearchbarController get to => Get.find<SearchbarController>();
+
+//    @override
+//   void onInit() {
+//     super.onInit();
+//       _audioPlayer = AudioPlayer();
+//   }
+
+//   @override
+//   void onClose() {
+//     _audioPlayer.dispose();
+//     super.onClose();
+//   }
+// }
+
+
+//modfd
+
+
 class SearchbarController extends GetxController {
-  late AudioPlayer _audioPlayer;
+  late AudioPlayer audioPlayer;
   RxList<SongModel> searchResults = <SongModel>[].obs;
+  RxBool isSearching = false.obs;
   SongModel? currentSong;
+  late OnAudioQuery audioQuery;
 
   static SearchbarController get to => Get.find<SearchbarController>();
 
-   @override
+  @override
   void onInit() {
     super.onInit();
-      _audioPlayer = AudioPlayer();
+    audioPlayer = AudioPlayer();
+    audioQuery = OnAudioQuery();
   }
 
   @override
   void onClose() {
-    _audioPlayer.dispose();
+    audioPlayer.dispose();
     super.onClose();
   }
 
+  void performSearch(String query) async {
+    final allSongs = await audioQuery.querySongs(
+      sortType: null,
+      orderType: OrderType.ASC_OR_SMALLER,
+      uriType: UriType.EXTERNAL,
+      ignoreCase: true,
+    );
 
+    final filteredSongs = allSongs.where(
+      (song) =>
+          song.title.toLowerCase().contains(query.toLowerCase()) ||
+          (song.artist != null && song.artist!.toLowerCase().contains(query.toLowerCase())),
+    ).toList();
 
-  // void _performSearch(String query) async {
-  //   final allSongs = await _audioQuery.querySongs(
-  //     sortType: null,
-  //     orderType: OrderType.ASC_OR_SMALLER,
-  //     uriType: UriType.EXTERNAL,
-  //     ignoreCase: true,
-  //   );
+    searchResults.assignAll(filteredSongs);
+    isSearching.value = query.isNotEmpty;
+  }
 
-  //   final filteredSongs = allSongs.where(
-  //     (song) =>
-  //         song.title.toLowerCase().contains(query.toLowerCase()) ||
-  //         (song.artist != null && song.artist!.toLowerCase().contains(query.toLowerCase())),
-  //   ).toList();
-
-  //   searchResults.assignAll(filteredSongs);
-  // }
+  void playSong(SongModel song) async {
+    await audioPlayer.stop();
+    await audioPlayer.setUrl(song.data);
+    await audioPlayer.play();
+  }
 }

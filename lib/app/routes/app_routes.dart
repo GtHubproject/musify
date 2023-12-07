@@ -16,7 +16,8 @@ abstract class Routes {
   static const DOWNLOAD = _Paths.DOWNLOAD;
   static const PERMISSION = _Paths.PERMISSION;
   static const SELECTPLAYLIST = _Paths.SELECTPLAYLIST;
-
+  static const NAMESELECTION = _Paths.NAMESELECTION;
+  static const FULLPLAYER = _Paths.FULLPLAYER;
 }
 
 abstract class _Paths {
@@ -33,6 +34,7 @@ abstract class _Paths {
   static const MUSICPLAYING = '/musicplaying';
   static const DOWNLOAD = '/download';
   static const PERMISSION = '/permission';
-   static const SELECTPLAYLIST = '/selectplaylist';
-
+  static const SELECTPLAYLIST = '/selectplaylist';
+  static const NAMESELECTION = '/selectplaylistname';
+  static const FULLPLAYER = '/fullsongview';
 }

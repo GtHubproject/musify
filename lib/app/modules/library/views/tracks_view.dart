@@ -1,11 +1,9 @@
 // TracksView.dart
 import 'package:flutter/material.dart';
-
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'dart:io';
-
 import 'package:get/get.dart';
 
 class TracksView extends StatefulWidget {
@@ -21,6 +19,8 @@ class _TracksViewState extends State<TracksView> {
       Get.put(BottomnavigationbarController());
   List<SongModel> _songs = [];
   bool _hasPermission = false;
+
+  SongModel selectedSong = SongModel({});
 
   @override
   void initState() {
@@ -66,6 +66,12 @@ class _TracksViewState extends State<TracksView> {
                   controller: trackController.audioQuery,
                   id: _songs[index].id,
                   type: ArtworkType.AUDIO,
+                  nullArtworkWidget: Container(
+                    width: 90,
+                    height: 90,
+                    color: Colors.black,
+                    child: Icon(Icons.music_note),
+                  ),
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -95,12 +101,15 @@ class _TracksViewState extends State<TracksView> {
                                     },
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.edit),
+                                    icon: Icon(Icons.add),
                                     onPressed: () {
-                                      // Handle add icon pressed
+                                      //selectplaylistname
+                                      Get.toNamed('/selectplaylistname',
+                                          arguments: {
+                                            'selectedSong': selectedSong
+                                          });
 
-                                      Navigator.pop(
-                                          context); // Close the bottom sheet
+                                      // Close the bottom sheet
                                     },
                                   ),
                                   IconButton(
@@ -199,96 +208,16 @@ class _TracksViewState extends State<TracksView> {
     );
   }
 
-
-
-
-
-
-
-//rename
-
-
-
-
 //miniplayer
   void _showBottomMediaBar(SongModel song) {
-    bool isInitiallyPlaying = trackController.audioPlayer.playing;
+    final bottomController = Get.find<BottomnavigationbarController>();
 
-    bottomnavigationbarController.setMiniPlayerVisible(true);
-
-    // Update the state of the mini-player widget
-    bottomnavigationbarController.currentSong.value = song;
-    bottomnavigationbarController.isPlaying.value = isInitiallyPlaying;
-
-    // showModalBottomSheet(
-    //   context: context,
-    //   builder: (context) {
-    //     return StatefulBuilder(
-    //       builder: (BuildContext context, StateSetter setState) {
-    //         return Container(
-    //           decoration: BoxDecoration(
-    //             color: Colors.yellow.shade100,
-    //             boxShadow: [
-    //               BoxShadow(
-    //                 color: Colors.grey.withOpacity(0.5),
-    //                 spreadRadius: 5,
-    //                 blurRadius: 7,
-    //                 offset: const Offset(0, 3),
-    //               ),
-    //             ],
-    //           ),
-    //           padding:
-    //               const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //             children: [
-    //               QueryArtworkWidget(
-    //                 controller: trackController.audioQuery,
-    //                 id: song.id,
-    //                 type: ArtworkType.AUDIO,
-    //               ),
-    //               Column(
-    //                 mainAxisSize: MainAxisSize.min,
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [
-    //                   Text(
-    //                     song.title,
-    //                     style: TextStyle(
-    //                         fontSize: 16, fontWeight: FontWeight.bold),
-    //                   ),
-    //                   Text(
-    //                     song.artist ?? "No Artist",
-    //                     style: TextStyle(fontSize: 14),
-    //                   ),
-    //                 ],
-    //               ),
-    //               IconButton(
-    //                 icon: Icon(
-    //                     isInitiallyPlaying ? Icons.pause : Icons.play_arrow),
-    //                 onPressed: () {
-    //                   isInitiallyPlaying
-    //                       ? trackController.audioPlayer.pause()
-    //                       : trackController.audioPlayer.play();
-    //                   setState(() {
-    //                     isInitiallyPlaying = !isInitiallyPlaying;
-    //                   });
-    //                 },
-    //               ),
-    //               IconButton(
-    //                 icon: const Icon(Icons.skip_next),
-    //                 onPressed: () {
-    //                   // Logic to skip to the next track
-    //                 },
-    //               ),
-    //             ],
-    //           ),
-    //         );
-    //       },
-    //     );
-    //   },
-    // );
-
-    trackController.playSong(song);
+    // Play the selected song
+    bottomController.playSong(song);
+    bottomnavigationbarController.update();
+    trackController.addRecentlyPlayed(song);
+    // Show the MiniPlayer widget in the BottomNavigationBar
+    //bottomController.changeIndex(1); // Assuming index 1 corresponds to the MiniPlayer in your BottomNavigationBar
   }
 
   Widget noAccessToLibraryWidget() {
@@ -316,8 +245,3 @@ class _TracksViewState extends State<TracksView> {
     );
   }
 }
-
-//seperate updated
-
-
-

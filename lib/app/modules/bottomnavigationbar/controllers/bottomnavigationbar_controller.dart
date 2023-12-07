@@ -2,87 +2,50 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-enum PlayerState { stopped, playing, paused }
-
 class BottomnavigationbarController extends GetxController {
-  final AudioPlayer audioPlayer = AudioPlayer();
-
-  final RxBool isPlaying = false.obs;
   var selectedIndex = 0.obs;
-
-  final isMiniPlayerVisible = false.obs;
-  final Rx<SongModel?> currentSong = Rx<SongModel?>(null);
-
-
- PlayerState playerState = PlayerState.stopped;
+  late AudioPlayer audioPlayer;
+  Rx<SongModel?> currentSong = Rx<SongModel?>(null);
 
   void changeIndex(int index) {
     selectedIndex.value = index;
   }
 
-  // Ensure proper initialization
-  void initializeAudioPlayer(String song) {
-    audioPlayer.setUrl(song);
+  @override
+  void onInit() {
+    super.onInit();
+    audioPlayer = AudioPlayer();
+    update();
   }
 
-  // final currentSong = SongModel().obs;
-  // final isPlaying = false.obs;
-
-  void setMiniPlayerVisible(bool visible) {
-    isMiniPlayerVisible.value = visible;
+  // Add a method to play a song using the AudioPlayer
+  Future<void> playSong(SongModel song) async {
+    print('Playing song: ${song.title}');
+    currentSong.value = song; // Update the current song
+    await audioPlayer.setUrl(song.data);
+    await audioPlayer.play();
+    update(); // Notify listeners
   }
 
-  void updateMiniPlayerState(SongModel song, bool playing) {
+  // Add a method to pause the currently playing song
+  Future<void> pauseSong() async {
+    print('Pausing song');
+    await audioPlayer.pause();
+    update();
+  }
+
+  // Add a method to stop the currently playing song
+  Future<void> stopSong() async {
+    print('Stopping song');
+    await audioPlayer.stop();
+    currentSong.value = null;
+    update();
+  }
+
+   void setCurrentSong(SongModel song) {
     currentSong.value = song;
-    isPlaying.value = playing;
+    update(); // Notify listeners
   }
 
-
-
-  void togglePlayPause() {
-    // Check if audioPlayer is null
-    if (audioPlayer == null) {
-      print("AudioPlayer is null!");
-      return;
-    }
-    isPlaying.value = !isPlaying.value;
-
-     if (isPlaying.value) {
-      print("Playing");
-      // If playing, resume or start playing
-      audioPlayer.play();
-    } else {
-      print("Pausing");
-      // If paused, pause
-      audioPlayer.pause();
-    }}
-
-  void playSong(SongModel song) {
-    currentSong.value = song;
-    isPlaying.value = true;
-
-    // Stop any currently playing song
-    audioPlayer.stop();
-
-    // Play the selected song
-    audioPlayer.setUrl(song.data).then((_) {
-      audioPlayer.play();
-    });
-  }
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  // }
-
-  // @override
-  // void onReady() {
-  //   super.onReady();
-  // }
-
-  // @override
-  // void onClose() {
-  //   super.onClose();
-  // }
-
-  // void increment() => count.value++;
+  
 }

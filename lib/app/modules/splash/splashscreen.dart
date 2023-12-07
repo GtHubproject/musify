@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(Duration(seconds: 2), () {
       // Navigate to the HomeView when the delay is complete.
-      Get.offNamed('/bottomnavigationbar');
+      Get.offNamed('/permission');
     });
     return Scaffold(
       backgroundColor: Colors.white,

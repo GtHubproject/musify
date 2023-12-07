@@ -7,6 +7,7 @@ import 'package:musicplayer/app/data/model/songmodel.dart';
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
 import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
 import 'package:musicplayer/app/modules/home/controllers/home_controller.dart';
+import 'package:musicplayer/app/modules/library/controllers/PlaylistNameSelectionController.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:musicplayer/app/modules/playlists/controllers/playlist_selection_controller_controller.dart';
 import 'package:musicplayer/app/modules/playlists/controllers/playlists_controller.dart';
@@ -19,18 +20,23 @@ class AppBindings extends Bindings {
   void dependencies() {
     // Searchbar bindings
     Get.lazyPut<SearchbarController>(() => SearchbarController());
- Get.lazyPut<BottomnavigationbarController>(() => BottomnavigationbarController());
+    Get.lazyPut<BottomnavigationbarController>(
+        () => BottomnavigationbarController());
 
     // Playlist bindings
-    Get.lazyPut<PlaylistSelectionController>(() => PlaylistSelectionController());
+    Get.lazyPut<PlaylistSelectionController>(
+        () => PlaylistSelectionController());
     Get.lazyPut<PlaylistDisplayController>(() => PlaylistDisplayController());
     Get.lazyPut<HomeController>(() => HomeController());
-     Get.lazyPut<HomeController>(() => HomeController());
-      Get.lazyPut<TrackController>(() => TrackController());
+    Get.lazyPut<HomeController>(() => HomeController());
+    Get.lazyPut<TrackController>(() => TrackController());
 
-     Get.lazyPut< FavouritesController>(() =>  FavouritesController());
-   //for tracksview to play song
-   Get.put<AudioPlayer>(AudioPlayer()); 
+    Get.lazyPut<PlaylistNameSelectionController>(
+        () => PlaylistNameSelectionController());
+
+    Get.lazyPut<FavouritesController>(() => FavouritesController());
+    //for tracksview to play song
+    Get.put<AudioPlayer>(AudioPlayer());
     // Add other bindings as needed
   }
 }
@@ -39,33 +45,35 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(SongModelAdapter());
-  Hive.registerAdapter(MusicAdapter()); 
+  Hive.registerAdapter(MusicAdapter());
 
 //playlist hive box
-await Hive.openBox<Music>('musicBox');
+  await Hive.openBox<Music>('musicBox');
 
 //fav hive box
-await Hive.openBox<Music>('favorites');
+  await Hive.openBox<Music>('favorites');
 
+//recently played
 
+ await Hive.openBox<Music>('recently_played');
 
-   Get.put(PlaylistSelectionController());
-   runApp(MyApp());
+  Get.put(PlaylistSelectionController());
+  runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    
     return GetMaterialApp(
-      initialBinding:AppBindings() ,
+      initialBinding: AppBindings(),
       debugShowCheckedModeBanner: false,
       title: "Application",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       theme:
-          ThemeData.dark().copyWith(scaffoldBackgroundColor: Colours.scafColor),
+          ThemeData.dark().copyWith(scaffoldBackgroundColor: Color.fromARGB(255, 96, 56, 91)),
     );
   }
 }

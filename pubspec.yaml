@@ -12,7 +12,7 @@ dependencies:
   get: 
   flutter: 
     sdk: flutter
-  just_audio: ^0.9.35
+  just_audio: ^0.9.36
   rxdart: ^0.27.7
   on_audio_query: ^2.9.0
   permission_handler: ^11.0.1
@@ -25,6 +25,10 @@ dependencies:
   path_provider: ^2.1.1
   flutter_launcher_icons: ^0.13.1
   file_picker: ^5.3.1
+  marquee: ^2.2.3
+  just_audio_background: ^0.0.1-beta.11
+  sleek_circular_slider: ^2.0.1
+  
   
   
   
