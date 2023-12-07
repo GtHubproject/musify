@@ -216,6 +216,7 @@ class _TracksViewState extends State<TracksView> {
     bottomController.playSong(song);
     bottomnavigationbarController.update();
     trackController.addRecentlyPlayed(song);
+    
     // Show the MiniPlayer widget in the BottomNavigationBar
     //bottomController.changeIndex(1); // Assuming index 1 corresponds to the MiniPlayer in your BottomNavigationBar
   }

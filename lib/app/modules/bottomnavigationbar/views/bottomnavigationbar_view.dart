@@ -111,7 +111,7 @@ class MiniPlayer extends StatelessWidget {
       child: SingleChildScrollView(
         child: GestureDetector(
           onTap: () {
-           // bottomController.navigateToFullPlayer();
+            Get.toNamed('/fullsongview');
           },
           child: Container(
             height: 70,
