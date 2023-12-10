@@ -17,8 +17,12 @@ class RecentlyPlayedScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 var song = recentlyPlayed.songs[index];
                 return ListTile(
-                  title: Text(song.title),
-                  subtitle: Text(song.artist ?? "No Artist"),
+                  title: Text(song.title,
+                    style: TextStyle(fontWeight: FontWeight.bold,color: const Color.fromARGB(255, 37, 37, 36)),
+                  ),
+                  subtitle: Text(song.artist ?? "No Artist",
+                   style: TextStyle(fontWeight: FontWeight.w300,color: const Color.fromARGB(255, 28, 27, 27)),
+                  ),
                   // Add other details or actions as needed
                 );
               },

@@ -1,4 +1,4 @@
-import 'dart:io';
+
 
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -19,8 +19,7 @@ class TrackController extends GetxController {
 //recently played
 
   late final Box<Music> recentlyPlayedBox;
-  final int maxRecentlyPlayed =
-      10; // Adjust the number of recently played songs to store
+  final int maxRecentlyPlayed =10; // Adjust the number of recently played songs to store
 
   //deelte song
   List<SongModel> _songs = [];
@@ -74,6 +73,7 @@ class TrackController extends GetxController {
 
       // Save the updated favorites back to the Hive box
       favoritesBox.put('favorites', favorites);
+      update();
       // Trigger a rebuild in the FavoritesScreen
       boxChangeListener.value++;
       print("added");
@@ -112,7 +112,7 @@ class TrackController extends GetxController {
     try {
       // Get the existing recently played songs or create a new one
       Music recentlyPlayed = recentlyPlayedBox.get('recently_played',
-          defaultValue: Music(songs: []))!;
+          defaultValue: Music(songs: [])) !;
 
       print('Before adding: ${recentlyPlayed.songs.map((s) => s.title)}');
 
@@ -135,29 +135,29 @@ class TrackController extends GetxController {
     }
   }
 
-
-
   //load recent
- // Load recently played songs from Hive box
+  // Load recently played songs from Hive box
   Future<void> loadRecentlyPlayed() async {
     try {
-      Music recentlyPlayed = recentlyPlayedBox.get('recently_played', defaultValue: Music(songs: []))!;
+      Music recentlyPlayed = recentlyPlayedBox.get('recently_played',
+          defaultValue: Music(songs: []))!;
 
       // Sort recently played songs by dateAdded, assuming SongModel has a dateAdded field
       recentlyPlayed.songs.sort((a, b) => b.dateAdded!.compareTo(a.dateAdded!));
 
       // Limit the recently played list to a certain number
       if (recentlyPlayed.songs.length > maxRecentlyPlayed) {
-        recentlyPlayed.songs.removeRange(maxRecentlyPlayed, recentlyPlayed.songs.length);
+        recentlyPlayed.songs
+            .removeRange(maxRecentlyPlayed, recentlyPlayed.songs.length);
       }
 
       // Save the updated recently played list back to the Hive box
       recentlyPlayedBox.put('recently_played', recentlyPlayed);
     } catch (e) {
+      //LateError (LateInitializationError: Field 'recentlyPlayedBox' has not been initialized.)
       print('Error loading recently played songs: $e');
       rethrow; // You can rethrow the exception if needed
     }
   }
-
 
 }

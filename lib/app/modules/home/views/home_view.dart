@@ -26,7 +26,9 @@ class HomeView extends GetView<HomeController> {
         title: const Text(
           'MUSIFY',
           style: TextStyle(
-              fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 70, 26, 26)),
         ),
       ),
       body: Column(
@@ -68,8 +70,11 @@ class HomeView extends GetView<HomeController> {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add_circle,
-                      size: 50, color: Colors.white),
+                  icon: const Icon(
+                    Icons.add_circle,
+                    size: 50,
+                    color: Color.fromARGB(255, 61, 21, 21),
+                  ),
                   onPressed: () async {
                     showCreatePlaylistDialog(context);
                     // }
@@ -143,7 +148,7 @@ class HomeView extends GetView<HomeController> {
           // List of Recently Played Songs
 
           Expanded(
-            child:recentlyPlayedSongsWidget(),
+            child: recentlyPlayedSongsWidget(),
           ),
         ],
       ),
@@ -155,7 +160,7 @@ class HomeView extends GetView<HomeController> {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog(backgroundColor: Color.fromARGB(255, 242, 234, 190),surfaceTintColor: const Color.fromARGB(255, 191, 16, 16),
           title: Text("Create Playlist"),
           content: TextField(
             onChanged: (value) {
@@ -185,22 +190,22 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-
-
-Widget recentlyPlayedSongsWidget() {
+  Widget recentlyPlayedSongsWidget() {
     return FutureBuilder<void>(
       // You might want to use FutureBuilder if loading recently played songs asynchronously
-      future: trackController.loadRecentlyPlayed(), // Ensure you have this method in your TrackController
+      future: trackController
+          .loadRecentlyPlayed(), // Ensure you have this method in your TrackController
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // You can replace it with a loading indicator
-        } else if (snapshot.hasError) {
-          return Text('Error loading recently played songs: ${snapshot.error}');
-        } else {
+        }
+        //else if (snapshot.hasError) {
+        // return Text('Error loading recently played songs: ${snapshot.error}');}
+
+        else {
           return RecentlyPlayedScreen(); // Display RecentlyPlayedScreen widget
         }
       },
     );
   }
-
 }

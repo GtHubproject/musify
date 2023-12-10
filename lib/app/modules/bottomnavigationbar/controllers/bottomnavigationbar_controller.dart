@@ -46,6 +46,4 @@ class BottomnavigationbarController extends GetxController {
     currentSong.value = song;
     update(); // Notify listeners
   }
-
-  
 }

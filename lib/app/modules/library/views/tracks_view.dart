@@ -1,6 +1,7 @@
 // TracksView.dart
 import 'package:flutter/material.dart';
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
+import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'dart:io';
@@ -26,6 +27,7 @@ class _TracksViewState extends State<TracksView> {
   void initState() {
     super.initState();
     checkAndRequestPermissions();
+     trackController.loadRecentlyPlayed();
   }
 
   Future<void> checkAndRequestPermissions({bool retry = false}) async {
@@ -60,16 +62,20 @@ class _TracksViewState extends State<TracksView> {
             itemBuilder: (context, index) {
               var song = _songs[index];
               return ListTile(
-                title: Text(_songs[index].title),
-                subtitle: Text(_songs[index].artist ?? "No Artist"),
+                title: Text(_songs[index].title,
+                style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black),
+                ),
+                subtitle: Text(_songs[index].artist ?? "No Artist",
+                 style: TextStyle(fontWeight: FontWeight.w400,color: Colors.black),
+                ),
                 leading: QueryArtworkWidget(
                   controller: trackController.audioQuery,
                   id: _songs[index].id,
                   type: ArtworkType.AUDIO,
                   nullArtworkWidget: Container(
-                    width: 90,
+                    width: 70,
                     height: 90,
-                    color: Colors.black,
+                    color:  Color.fromARGB(235, 131, 83, 76),
                     child: Icon(Icons.music_note),
                   ),
                 ),
@@ -77,7 +83,7 @@ class _TracksViewState extends State<TracksView> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.more_vert), // More Vert Icon
+                      icon: Icon(Icons.more_vert,color: Colors.brown,), // More Vert Icon
                       onPressed: () {
                         showModalBottomSheet(
                           context: context,
@@ -91,10 +97,13 @@ class _TracksViewState extends State<TracksView> {
                                   IconButton(
                                     icon: Icon(Icons.favorite),
                                     onPressed: () {
-                                      final controller =
-                                          Get.find<TrackController>();
+                                      // Call the addToFavorites method from the TracksController
+                             trackController.addToFavorites(song);
+                            // Notify the FavouritesController to trigger a rebuild
+                            Get.find<FavouritesController>().update();
+                                     // final controller = Get.find<TrackController>();
                                       // Add the current song to favorites
-                                      controller.addToFavorites(song);
+                                      //controller.addToFavorites(song);
 
                                       Navigator.pop(
                                           context); // Close the bottom sheet

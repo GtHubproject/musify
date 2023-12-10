@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:marquee/marquee.dart';
+import 'package:musicplayer/app/modules/bottomnavigationbar/views/miniplayer.dart';
 import 'package:musicplayer/app/modules/favourites/views/favourites_view.dart';
 import 'package:musicplayer/app/modules/home/views/home_view.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:musicplayer/app/modules/library/views/library_view.dart';
 import 'package:musicplayer/app/modules/profile/views/profile_view.dart';
 import 'package:musicplayer/app/modules/searchbar/views/searchbar_view.dart';
-import 'package:musicplayer/constants/colors.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+
 
 import '../controllers/bottomnavigationbar_controller.dart';
 
@@ -40,7 +40,7 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
               ),
             ),
             Positioned(
-              bottom: 4, // Adjust the value as needed
+              bottom: 2, // Adjust the value as needed
               left: 0,
               right: 0,
               child: MiniPlayer(),
@@ -62,10 +62,11 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
             ),
             child: Obx(
               () => BottomNavigationBar(
-                backgroundColor: const Color.fromARGB(255, 222, 220, 212),
+               //  backgroundColor: const Color.fromARGB(255, 222, 220, 212),
+                backgroundColor: Color.fromARGB(255, 242, 234, 190),
                 type: BottomNavigationBarType.fixed,
-                selectedItemColor: Color.fromARGB(255, 80, 76, 24),
-                unselectedItemColor: Color.fromARGB(255, 15, 15, 15),
+                selectedItemColor:  Color.fromARGB(255, 61, 21, 21),
+                unselectedItemColor: Color.fromARGB(255, 252, 250, 250),
                 showSelectedLabels: true,
                 showUnselectedLabels: false,
                 onTap: (index) {
@@ -99,98 +100,4 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
   }
 }
 
-class MiniPlayer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final BottomnavigationbarController bottomController = Get.find();
-    final trackController = Get.find<TrackController>();
-    final currentSong = bottomController.currentSong.value;
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
-        child: GestureDetector(
-          onTap: () {
-            Get.toNamed('/fullsongview');
-          },
-          child: Container(
-            height: 70,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 237, 96, 31),
-            ),
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    currentSong != null
-                        ? QueryArtworkWidget(
-                            controller: trackController.audioQuery,
-                            id: currentSong.id,
-                            type: ArtworkType.AUDIO,
-                          )
-                        : Container(),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 20,
-                            child: Marquee(
-                              text: currentSong != null
-                                  ? 'Now Playing: ${currentSong.title}'
-                                  : 'No song playing',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Text(
-                            currentSong != null
-                                ? 'Artist: ${currentSong.artist ?? "Unknown"}'
-                                : '',
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(bottomController.audioPlayer.playing
-                          ? Icons.pause
-                          : Icons.play_arrow),
-                      onPressed: () {
-                        if (bottomController.audioPlayer.playing) {
-                          bottomController.pauseSong();
-                        } else {
-                          bottomController.audioPlayer.play();
-                        }
-                        bottomController.update();
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.stop),
-                      onPressed: () {
-                        bottomController.stopSong();
-                        bottomController.update();
-                      },
-                    ),
-                  ],
-                ),
-                Expanded(
-                  flex: 2,
-                  child: currentSong != null
-                      ? LinearProgressIndicator(
-                          value: currentSong.duration?.toDouble() ?? 0.0,
-                          backgroundColor: Colors.grey,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Color.fromARGB(255, 213, 199, 199),
-                          ),
-                          minHeight: 0.001,
-                        )
-                      : Container(),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

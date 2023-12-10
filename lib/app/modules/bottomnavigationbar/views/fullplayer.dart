@@ -30,6 +30,17 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
               type: ArtworkType.AUDIO,
               artworkHeight: 250,
               artworkWidth: 250,
+               nullArtworkWidget: Container(
+                decoration: BoxDecoration(
+                   color: Color.fromARGB(235, 131, 83, 76),
+                  borderRadius: BorderRadius.circular(10.0),),
+                   width: 250,
+                    height: 242,
+                  
+                    child: Icon(Icons.music_note,
+                    size: 100,
+                    ),
+                  ),
             ),
 
             SizedBox(height: 16),

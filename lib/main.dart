@@ -13,27 +13,26 @@ import 'package:musicplayer/app/modules/library/controllers/tracks_controller.da
 import 'package:musicplayer/app/modules/playlists/controllers/playlist_selection_controller_controller.dart';
 import 'package:musicplayer/app/modules/playlists/controllers/playlists_controller.dart';
 import 'package:musicplayer/app/modules/searchbar/controllers/searchbar_controller.dart';
-
 import 'app/routes/app_pages.dart';
 
 class AppBindings extends Bindings {
   @override
   void dependencies() {
-
-    
     // Searchbar bindings
     Get.lazyPut<SearchbarController>(() => SearchbarController());
     Get.lazyPut<BottomnavigationbarController>(
         () => BottomnavigationbarController());
 
     // Playlist bindings
-    Get.lazyPut<PlaylistSelectionController>(() => PlaylistSelectionController());
+    Get.lazyPut<PlaylistSelectionController>(
+        () => PlaylistSelectionController());
     Get.lazyPut<PlaylistDisplayController>(() => PlaylistDisplayController());
     Get.lazyPut<HomeController>(() => HomeController());
     Get.lazyPut<HomeController>(() => HomeController());
     Get.lazyPut<TrackController>(() => TrackController());
 
-    Get.lazyPut<PlaylistNameSelectionController>(() => PlaylistNameSelectionController());
+    Get.lazyPut<PlaylistNameSelectionController>(
+        () => PlaylistNameSelectionController());
 
     Get.lazyPut<FavouritesController>(() => FavouritesController());
 
@@ -75,8 +74,18 @@ class MyApp extends StatelessWidget {
       title: "Application",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
-      theme: ThemeData.dark()
-          .copyWith(scaffoldBackgroundColor: Color.fromARGB(255, 96, 56, 91)),
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor:Colors.white,
+
+        textTheme: ThemeData.dark().textTheme.copyWith(
+         // Set the text color to black for all text styles
+          bodyLarge: TextStyle(color: Colors.black),
+          bodyMedium: TextStyle(color: Colors.black),
+          displayLarge: TextStyle(color: Colors.black),
+          displayMedium: TextStyle(color: Colors.black),
+         // Add more text styles as needed
+        ),
+        ),
     );
   }
 }

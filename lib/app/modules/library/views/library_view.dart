@@ -13,7 +13,7 @@ class LibraryView extends GetView<LibraryController> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(centerTitle: true,
           title: Text('Library'),
           bottom: TabBar(
             indicatorColor: const Color.fromARGB(255, 253, 242, 139),

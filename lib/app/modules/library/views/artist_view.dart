@@ -30,10 +30,15 @@ class _ArtistsViewState extends State<ArtistsView> {
     checkAndRequestPermissions();
   }
 
-  checkAndRequestPermissions({bool retry = false}) async {
-    _hasPermission = await _audioQuery.checkAndRequest(retryRequest: retry);
-    _hasPermission ? setState(() {}) : null;
+checkAndRequestPermissions({bool retry = false}) async {
+  bool hasPermission = await _audioQuery.checkAndRequest(retryRequest: retry);
+  if (hasPermission) {
+    setState(() {
+      _hasPermission = true;
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

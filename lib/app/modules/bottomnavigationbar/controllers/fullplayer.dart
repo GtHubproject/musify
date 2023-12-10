@@ -16,11 +16,10 @@ class FullSongplayerController extends GetxController {
     super.onInit();
     trackController = Get.find<TrackController>();
     bottomController = Get.find<BottomnavigationbarController>();
-     audioPlayer = bottomController.audioPlayer; 
+    audioPlayer = bottomController.audioPlayer;
   }
 
-   SongModel? get currentSong => bottomController.currentSong.value;
-
+  SongModel? get currentSong => bottomController.currentSong.value;
 
   void seekTo(double seconds) {
     bottomController.audioPlayer.seek(Duration(seconds: seconds.toInt()));
@@ -50,9 +49,7 @@ class FullSongplayerController extends GetxController {
     update();
   }
 
-
-
-   String formatDuration(Duration duration) {
+  String formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));

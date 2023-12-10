@@ -127,47 +127,36 @@ class FavouritesView extends GetView<FavouritesController> {
     return GetBuilder<FavouritesController>(
       builder: (controller) {
         final favoritesBox = Hive.box<Music>('favorites');
+        final List<SongModel> favoriteSongs =
+            (favoritesBox.get('favorites', defaultValue: Music(songs: [])) ??
+                    Music(songs: []))
+                .songs;
 
-        return FutureBuilder(
-          future: Hive.openBox<Music>('favorites'),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              final List<SongModel> favoriteSongs =
-                  (favoritesBox.get('favorites', defaultValue: Music(songs: [])) ??
-                          Music(songs: []))
-                      .songs;
+        if (favoriteSongs.isEmpty) {
+          return Center(
+            child: Text('No favorite songs yet!'),
+          );
+        }
 
-              if (favoriteSongs.isEmpty) {
-                return Center(
-                  child: Text('No favorite songs yet!'),
-                );
-              }
+        return ListView.builder(
+          itemCount: favoriteSongs.length,
+          itemBuilder: (context, index) {
+            var song = favoriteSongs[index];
 
-              return ListView.builder(
-                itemCount: favoriteSongs.length,
-                itemBuilder: (context, index) {
-                  var song = favoriteSongs[index];
-
-                  return ListTile(
-                    title: Text(song.title),
-                    subtitle: Text(song.artist ?? 'No Artist'),
-                    trailing: IconButton(
-                      icon: Icon(Icons.favorite, color: Colors.red),
-                      onPressed: () {
-                        controller.removeFromPlaylist(song);
-                      },
-                    ),
-                  );
+            return ListTile(
+              title: Text(song.title),
+              subtitle: Text(song.artist ?? 'No Artist'),
+              trailing: IconButton(
+                icon: Icon(Icons.favorite, color: Colors.red),
+                onPressed: () {
+                  controller.removeFromPlaylist(song);
                 },
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+              ),
+            );
           },
         );
       },
     );
   }
 }
+
