@@ -29,6 +29,8 @@ dependencies:
   just_audio_background: ^0.0.1-beta.11
   sleek_circular_slider: ^2.0.1
   shared_preferences: ^2.2.2
+  audio_video_progress_bar: ^2.0.1
+  audio_service: ^0.18.12
   
   
   

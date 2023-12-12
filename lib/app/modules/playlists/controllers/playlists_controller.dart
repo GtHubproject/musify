@@ -115,7 +115,7 @@ void showDeleteDialog(BuildContext context) {
     musicBox.put(newName, playlist);
     // Update the current playlistName
     playlistName = newName;
-    // Navigate back to the previous screen or perform any other necessary actions
+   
     Get.back();
   }
 

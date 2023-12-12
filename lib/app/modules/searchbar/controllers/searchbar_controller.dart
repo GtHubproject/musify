@@ -43,17 +43,7 @@ class SearchbarController extends GetxController {
   }
 
 
-    Future<void> playSong(SongModel song) async {
-    try {
-      await audioPlayer.stop(); // Stop the current song if any
-      await audioPlayer.setUrl(song.data);
-      await audioPlayer.play();
-      currentSong = song;
-      update();
-    } catch (e) {
-      print('Error playing song: $e');
-    }
-  }
+  
 
  
 }

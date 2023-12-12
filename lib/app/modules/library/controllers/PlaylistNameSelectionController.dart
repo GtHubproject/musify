@@ -1,65 +1,48 @@
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+
 import 'package:hive/hive.dart';
 import 'package:musicplayer/app/data/model/song_model.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-
 class PlaylistNameSelectionController extends GetxController {
-  final musicBox = Hive.box<Music>('musicBox');
-  RxList<PlaylistItem> playlists = <PlaylistItem>[].obs;
+  //final musicBox = Hive.box<Music>('musicBox');
+  // late SongModel selectedSong; // To store the selected song
 
-  @override
-  void onInit() {
-    // Fetch the existing playlists from the musicBox
-    fetchPlaylists();
-    super.onInit();
-  }
+  // @override
+  // void onInit() {
+  //   // Retrieve the selected song from the navigation arguments
+  //   selectedSong = Get.arguments['selectedSong'];
 
-  void fetchPlaylists() {
-    playlists.clear();
-    musicBox.keys.forEach((playlistName) {
-      // Get the number of songs in each playlist
-      int numberOfSongs = (musicBox.get(playlistName) as Music?)?.songs.length ?? 0;
+  //   super.onInit();
+  // }
 
-      // Add the playlist to the list
-      playlists.add(PlaylistItem(name: playlistName, numberOfSongs: numberOfSongs, isSelected: false));
-    });
-  }
-  
-  // Function to add a song to the selected playlists
-  Future<void> addSongToSelectedPlaylists(SongModel selectedSong) async {
-    List<String> selectedPlaylists = playlists.where((playlist) => playlist.isSelected).map((playlist) => playlist.name).toList();
-    
-    // Add the selected song to each selected playlist
-    for (String playlistName in selectedPlaylists) {
-      await addSongToPlaylist(playlistName, selectedSong);
-    }
-  }
+  // // Get the list of playlists
+  // List<String> get playlists => musicBox.keys.cast<String>().toList();
 
-  Future<void> addSongToPlaylist(String playlistName, SongModel selectedSong) async {
-    // Retrieve the playlist from the box
-    Music? playlistNullable = musicBox.get(playlistName);
+  // // Get the number of songs in a playlist
+  // int numberOfSongsInPlaylist(String playlistName) {
+  //   Music playlist = musicBox.get(playlistName) ?? Music(songs: []);
+  //   return playlist.songs.length;
+  // }
 
-    // Check if the playlist is null, if so, provide a default value
-    Music playlist = playlistNullable ?? Music(songs: []);
+  // Function to add the selected song to a playlist
+  // void addSongToPlaylist(String playlistName) {
+  //   try {
+  //     // Retrieve the playlist from the box
+  //     Music playlist = musicBox.get(playlistName) ?? Music(songs: []);
 
-    // Add the selected song to the playlist
-    playlist.songs.add(selectedSong);
+  //     // Add the selected song to the playlist
+  //     playlist.songs.add(selectedSong);
 
-    // Save the updated playlist back to the box
-    await musicBox.put(playlistName, playlist);
-  }
-}
+  //     // Save the updated playlist back to the box
+  //     musicBox.put(playlistName, playlist);
 
-class PlaylistItem {
-  final String name;
-  final int numberOfSongs;
-  bool isSelected;
+  //     // Optionally, show a snackbar or toast to indicate success
+  //     Get.snackbar("Song Added", "${selectedSong.title} added to $playlistName");
 
-  PlaylistItem({
-    required this.name,
-    required this.numberOfSongs,
-    this.isSelected = false,
-  });
+  //     // Close the bottom sheet
+  //     Get.back();
+  //   } catch (e) {
+  //     print('Error adding song to playlist: $e');
+  //   }
+  // }
 }

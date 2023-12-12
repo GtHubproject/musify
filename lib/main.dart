@@ -31,19 +31,21 @@ class AppBindings extends Bindings {
     Get.lazyPut<HomeController>(() => HomeController());
     Get.lazyPut<TrackController>(() => TrackController());
 
-    Get.lazyPut<PlaylistNameSelectionController>(
-        () => PlaylistNameSelectionController());
+    Get.put<PlaylistNameSelectionController>(
+         PlaylistNameSelectionController());
 
     Get.lazyPut<FavouritesController>(() => FavouritesController());
 
     Get.lazyPut<FullSongplayerController>(() => FullSongplayerController());
     //for tracksview to play song
     Get.put<AudioPlayer>(AudioPlayer());
-    // Add other bindings as needed
+
+  
   }
 }
-
 void main() async {
+
+  //hive
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(SongModelAdapter());
@@ -56,10 +58,12 @@ void main() async {
   await Hive.openBox<Music>('favorites');
 
 //recently played
-
   await Hive.openBox<Music>('recently_played');
 
   Get.put(PlaylistSelectionController());
+
+
+  
   runApp(MyApp());
 }
 

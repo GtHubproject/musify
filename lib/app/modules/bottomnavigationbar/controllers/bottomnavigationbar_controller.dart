@@ -6,6 +6,14 @@ class BottomnavigationbarController extends GetxController {
   var selectedIndex = 0.obs;
   late AudioPlayer audioPlayer;
   Rx<SongModel?> currentSong = Rx<SongModel?>(null);
+  List<SongModel> _songs = [];
+
+
+
+   
+
+  
+
 
   void changeIndex(int index) {
     selectedIndex.value = index;
@@ -15,6 +23,7 @@ class BottomnavigationbarController extends GetxController {
   void onInit() {
     super.onInit();
     audioPlayer = AudioPlayer();
+    
     update();
   }
 
@@ -24,6 +33,7 @@ class BottomnavigationbarController extends GetxController {
     currentSong.value = song; // Update the current song
     await audioPlayer.setUrl(song.data);
     await audioPlayer.play();
+    
     update(); // Notify listeners
   }
 
@@ -42,8 +52,28 @@ class BottomnavigationbarController extends GetxController {
     update();
   }
 
-   void setCurrentSong(SongModel song) {
+  void setCurrentSong(SongModel song) {
     currentSong.value = song;
     update(); // Notify listeners
+  }
+
+   // Add a method to set the list of songs for nexet palying
+  void setSongs(List<SongModel> songs) {
+    _songs = songs;
+  }
+
+  void playNextSong() {
+    if (currentSong.value != null) {
+      int currentIndex = _songs.indexWhere((song) => song.id == currentSong.value!.id);
+
+      if (currentIndex != -1 && currentIndex < _songs.length - 1) {
+        // If the current song is not the last song in the list
+        playSong(_songs[currentIndex + 1]);
+      } else {
+        // If the current song is the last song, you can implement looping or any other logic
+        // For example, you can go back to the first song:
+        playSong(_songs.first);
+      }
+    }
   }
 }

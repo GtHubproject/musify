@@ -1,4 +1,3 @@
-// TracksView.dart
 import 'package:flutter/material.dart';
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
 import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
@@ -21,13 +20,12 @@ class _TracksViewState extends State<TracksView> {
   List<SongModel> _songs = [];
   bool _hasPermission = false;
 
-  SongModel selectedSong = SongModel({});
-
+  // SongModel selectedSong = SongModel({});
   @override
   void initState() {
     super.initState();
     checkAndRequestPermissions();
-     trackController.loadRecentlyPlayed();
+    trackController.loadRecentlyPlayed();
   }
 
   Future<void> checkAndRequestPermissions({bool retry = false}) async {
@@ -45,6 +43,9 @@ class _TracksViewState extends State<TracksView> {
 
   Future<void> loadSongs() async {
     List<SongModel> songs = await trackController.querySongs();
+    //for the minplayer playnext song feature
+    
+     bottomnavigationbarController.setSongs(songs); // Set the list of songs
     setState(() {
       _songs = songs;
     });
@@ -62,11 +63,15 @@ class _TracksViewState extends State<TracksView> {
             itemBuilder: (context, index) {
               var song = _songs[index];
               return ListTile(
-                title: Text(_songs[index].title,
-                style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black),
+                title: Text(
+                  _songs[index].title,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
                 ),
-                subtitle: Text(_songs[index].artist ?? "No Artist",
-                 style: TextStyle(fontWeight: FontWeight.w400,color: Colors.black),
+                subtitle: Text(
+                  _songs[index].artist ?? "No Artist",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400, color: Colors.black),
                 ),
                 leading: QueryArtworkWidget(
                   controller: trackController.audioQuery,
@@ -75,7 +80,7 @@ class _TracksViewState extends State<TracksView> {
                   nullArtworkWidget: Container(
                     width: 70,
                     height: 90,
-                    color:  Color.fromARGB(235, 131, 83, 76),
+                    color: Color.fromARGB(235, 131, 83, 76),
                     child: Icon(Icons.music_note),
                   ),
                 ),
@@ -83,7 +88,10 @@ class _TracksViewState extends State<TracksView> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.more_vert,color: Colors.brown,), // More Vert Icon
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: Colors.brown,
+                      ), // More Vert Icon
                       onPressed: () {
                         showModalBottomSheet(
                           context: context,
@@ -98,10 +106,10 @@ class _TracksViewState extends State<TracksView> {
                                     icon: Icon(Icons.favorite),
                                     onPressed: () {
                                       // Call the addToFavorites method from the TracksController
-                             trackController.addToFavorites(song);
-                            // Notify the FavouritesController to trigger a rebuild
-                            Get.find<FavouritesController>().update();
-                                     // final controller = Get.find<TrackController>();
+                                      trackController.addToFavorites(song);
+                                      // Notify the FavouritesController to trigger a rebuild
+                                      Get.find<FavouritesController>().update();
+                                      // final controller = Get.find<TrackController>();
                                       // Add the current song to favorites
                                       //controller.addToFavorites(song);
 
@@ -112,10 +120,11 @@ class _TracksViewState extends State<TracksView> {
                                   IconButton(
                                     icon: Icon(Icons.add),
                                     onPressed: () {
+                                      Navigator.pop(context);
                                       //selectplaylistname
                                       Get.toNamed('/selectplaylistname',
                                           arguments: {
-                                            'selectedSong': selectedSong
+                                            'selectedSong': _songs[index]
                                           });
 
                                       // Close the bottom sheet
@@ -138,8 +147,12 @@ class _TracksViewState extends State<TracksView> {
                     ),
                   ],
                 ),
-                onTap: () {
-                  _showBottomMediaBar(_songs[index]);
+                onTap: () { bottomnavigationbarController.playSong(_songs[index]);
+               //   _showBottomMediaBar(_songs[index]);
+                   
+                 // bottomnavigationbarController.playSong(_songs[index]);
+                  bottomnavigationbarController.update();
+                  trackController.addRecentlyPlayed(_songs[index]);
                 },
               );
             },
@@ -218,17 +231,17 @@ class _TracksViewState extends State<TracksView> {
   }
 
 //miniplayer
-  void _showBottomMediaBar(SongModel song) {
-    final bottomController = Get.find<BottomnavigationbarController>();
+  // void _showBottomMediaBar(SongModel song) {
+  //   final bottomController = Get.find<BottomnavigationbarController>();
 
-    // Play the selected song
-    bottomController.playSong(song);
-    bottomnavigationbarController.update();
-    trackController.addRecentlyPlayed(song);
-    
-    // Show the MiniPlayer widget in the BottomNavigationBar
-    //bottomController.changeIndex(1); // Assuming index 1 corresponds to the MiniPlayer in your BottomNavigationBar
-  }
+  //   // Play the selected song
+  //   bottomController.playSong(song);
+  //   bottomnavigationbarController.update();
+  //   trackController.addRecentlyPlayed(song);
+
+  //   // Show the MiniPlayer widget in the BottomNavigationBar
+  //   //bottomController.changeIndex(1); // Assuming index 1 corresponds to the MiniPlayer in your BottomNavigationBar
+  // }
 
   Widget noAccessToLibraryWidget() {
     return Center(

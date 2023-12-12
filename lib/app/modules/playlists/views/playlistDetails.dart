@@ -5,6 +5,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:musicplayer/app/data/model/box.dart';
 import 'package:musicplayer/app/data/model/song_model.dart';
+import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
+import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:musicplayer/app/modules/playlists/widgets/renameDialog.dart';
 import 'package:musicplayer/app/modules/playlists/widgets/showDeleteDialog.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -14,10 +16,17 @@ class PlaylistDisplayView extends GetView<PlaylistDisplayController> {
   PlaylistDisplayView({Key? key}) : super(key: key);
   final PlaylistDisplayController controller =
       Get.find<PlaylistDisplayController>();
+
+  BottomnavigationbarController bottomnavigationbarController =
+      Get.put(BottomnavigationbarController());
+
+  final TrackController trackController = Get.put(TrackController());
+ // List<SongModel> _songs = [];
+
   @override
   Widget build(BuildContext context) {
     // Handle null case by providing a default playlistName if it's null
-    String playlistName = controller.playlistName ;
+    String playlistName = controller.playlistName;
     //  String playlistName = controller.playlistName ?? '';
     return Scaffold(
       appBar: AppBar(
@@ -52,7 +61,7 @@ class PlaylistDisplayView extends GetView<PlaylistDisplayController> {
             },
             onSelected: (value) {
               if (value == 'rename') {
-               controller.showRenameDialog(context);
+                controller.showRenameDialog(context);
               } else if (value == 'delete') {
                 controller.showDeleteDialog(context);
               }
@@ -69,15 +78,33 @@ class PlaylistDisplayView extends GetView<PlaylistDisplayController> {
       valueListenable: controller.musicBox.listenable(),
       builder: (context, musicBox, child) {
         // Retrieve the selected playlist from the box
-        Music playlist =
-            musicBox.get(controller.playlistName) ?? Music(songs: []);
+        // Retrieve the selected playlist from the box
+        Music? playlist = musicBox.get(controller.playlistName);
+
+        // if (playlist?.songs == null || playlist?.songs.isEmpty == true) {
+        //   // Handle null or empty playlist
+        //   return Center(
+        //     child: Text('Playlist is empty'),
+        //   );
+        // }
+
 
         return ListView.builder(
-          itemCount: playlist.songs.length,
+          itemCount: playlist!.songs.length,
           itemBuilder: (context, index) {
             SongModel song = playlist.songs[index];
 
             return ListTile(
+              onTap: () {
+                
+
+                bottomnavigationbarController.playSong(song);
+                 // Update the current song in bottomnavigationbarController
+           bottomnavigationbarController.setCurrentSong(song);
+                bottomnavigationbarController.update();
+                trackController.addRecentlyPlayed(song);
+              },
+
               title: Text(song.title),
               subtitle: Text(song.artist ?? "No Artist"),
 
@@ -94,4 +121,6 @@ class PlaylistDisplayView extends GetView<PlaylistDisplayController> {
       },
     );
   }
+
+ 
 }

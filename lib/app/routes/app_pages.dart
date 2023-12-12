@@ -111,7 +111,7 @@ class AppPages {
 
      GetPage(
       name: _Paths.FULLPLAYER,
-      page: () => const FullSongplayerView(),
+      page: () =>  FullSongplayerView(),
       binding: PermissionBinding(),
     ),
   ];

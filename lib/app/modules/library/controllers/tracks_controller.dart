@@ -1,9 +1,8 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hive/hive.dart';
 import 'package:musicplayer/app/data/model/song_model.dart';
+
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
@@ -19,7 +18,8 @@ class TrackController extends GetxController {
 //recently played
 
   late final Box<Music> recentlyPlayedBox;
-  final int maxRecentlyPlayed =10; // Adjust the number of recently played songs to store
+  final int maxRecentlyPlayed =
+      10; // Adjust the number of recently played songs to store
 
   //deelte song
   List<SongModel> _songs = [];
@@ -112,7 +112,7 @@ class TrackController extends GetxController {
     try {
       // Get the existing recently played songs or create a new one
       Music recentlyPlayed = recentlyPlayedBox.get('recently_played',
-          defaultValue: Music(songs: [])) !;
+          defaultValue: Music(songs: []))!;
 
       print('Before adding: ${recentlyPlayed.songs.map((s) => s.title)}');
 
@@ -159,5 +159,4 @@ class TrackController extends GetxController {
       rethrow; // You can rethrow the exception if needed
     }
   }
-
 }

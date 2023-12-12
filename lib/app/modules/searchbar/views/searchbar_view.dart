@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
+import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../controllers/searchbar_controller.dart';
 
@@ -107,6 +108,12 @@ import '../controllers/searchbar_controller.dart';
  //modfd
  
 class SearchbarView extends GetView<SearchbarController> {
+
+  final BottomnavigationbarController bottomnavigationbarController =
+      Get.put(BottomnavigationbarController());
+
+       final TrackController trackController = Get.put(TrackController());
+       
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,11 +163,11 @@ class SearchbarView extends GetView<SearchbarController> {
                         type: ArtworkType.AUDIO,
                       ),
                       onTap: () {
-                         controller.playSong(searchResults[index]); // Play the tapped song
-                    // Additionally, you may want to update the MiniPlayer in your bottom navigation bar
-                    // You can do this by updating the BottomnavigationbarController's currentSong
-                    Get.find<BottomnavigationbarController>().setCurrentSong(searchResults[index]);
-                      },
+                      bottomnavigationbarController.playSong(searchResults[index]);
+                        trackController.addRecentlyPlayed(searchResults[index]); 
+                        bottomnavigationbarController.update();
+                        },  
+                    
                     );
                   },
                 );

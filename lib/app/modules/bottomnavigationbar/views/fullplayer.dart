@@ -4,13 +4,20 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/fullplayer.dart';
+import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
+import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+
 
 class FullSongplayerView extends GetView<FullSongplayerController> {
-  const FullSongplayerView({Key? key}) : super(key: key);
 
-  
+   FullSongplayerView({Key? key}) : super(key: key);
+
+   final FullSongplayerController fullSongplayerController = Get.put(FullSongplayerController());
+
+ final TrackController trackController = Get.put(TrackController());
+
+ double _progressValue = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +52,23 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
 
             SizedBox(height: 16),
 
-            Text(
-              controller.currentSong?.title ?? '',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+            Row(
+              children: [
+                IconButton(onPressed:(){
+                  SongModel currentSong = controller.currentSong!;
+    // Call the addToFavorites method from the TrackController
+    trackController.addToFavorites(currentSong);
+    // Notify the FavoritesController to trigger a rebuild
+    Get.find<FavouritesController>().update();
+                }, icon:Icon(Icons.favorite)),
+                Text(
+                  controller.currentSong?.title ?? '',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
             ),
 
             Text(
@@ -60,60 +78,29 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
 
             SizedBox(height: 16),
 
-Stack(
+           Stack(
   alignment: Alignment.centerLeft,
   children: [
-    // Linear Progress Indicator
     LinearProgressIndicator(
-      value: (controller.audioPlayer.position.inSeconds.toDouble() /
-          (controller.currentSong?.duration?.toDouble() ?? 1.0)), // Ensure non-zero denominator
-      valueColor: AlwaysStoppedAnimation<Color>(
-        Color.fromARGB(255, 213, 199, 199),
-      ),
+      value: (controller.audioPlayer.duration?.inMilliseconds ?? 0) > 0
+          ? (controller.audioPlayer.position.inMilliseconds /
+                  controller.audioPlayer.duration!.inMilliseconds)
+          .clamp(0.0, 1.0):0.0,
+      minHeight: 8,
       backgroundColor: Colors.grey,
-    ),
-
-    // Dragged portion indicator
-    AnimatedPositioned(
-      left: (controller.audioPlayer.position.inSeconds.toDouble() /
-              (controller.currentSong?.duration?.toDouble() ?? 1.0)) *
-          MediaQuery.of(context).size.width, // Calculate left position based on progress
-      duration: Duration(milliseconds: 500), // Adjust the duration of the animation
-      child: Container(
-        width: 5, // Adjust the width of the circular indicator
-        height: 10, // Adjust the height of the circular indicator
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: const Color.fromARGB(255, 92, 244, 54), // Change the color of the circular indicator
-        ),
-      ),
-    ),
-
-    // Time Display Row
-    Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "00:00", // Replace with the left time value
-              style: TextStyle(color: const Color.fromARGB(255, 16, 6, 6)),
-            ),
-            Text(
-              // Format the duration based on the current song's position
-             controller.formatDuration(controller.audioPlayer.position),
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-      ),
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
     ),
   ],
 ),
+
+
+// Stack(
+
+//   alignment: Alignment.centerLeft,
+//   children: [
+//     //progression bar
+//   ],
+// ),
 
 
 
