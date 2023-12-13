@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:musicplayer/app/modules/bottomnavigationbar/views/fullplayer.dart';
 import 'package:musicplayer/app/modules/library/views/PlaylistNameSelectionView.dart';
+import 'package:musicplayer/app/modules/library/views/albumsong.dart';
+import 'package:musicplayer/app/modules/library/views/artistandsong.dart';
 import 'package:musicplayer/app/modules/playlists/views/playlistDetails.dart';
 import 'package:musicplayer/app/modules/playlists/views/playlist_selection_screen_view.dart';
 
@@ -114,5 +116,19 @@ class AppPages {
       page: () =>  FullSongplayerView(),
       binding: PermissionBinding(),
     ),
+
+     GetPage(
+      name: _Paths.ARTISTSONG,
+      page: () => ArtistSongsScreen(),
+      binding: PermissionBinding(),
+    ),
+    
+     GetPage(
+      name: _Paths.ARTISTSONG,
+      page: () => AlbumSongsScreen(),
+      
+     )
+
+
   ];
 }

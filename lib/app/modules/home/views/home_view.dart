@@ -82,7 +82,7 @@ class HomeView extends GetView<HomeController> {
                 ),
               ],
 
-              // }
+              
             ),
           ),
 
@@ -91,8 +91,40 @@ class HomeView extends GetView<HomeController> {
             child: ValueListenableBuilder(
               valueListenable: controller.musicBox.listenable(),
               builder: (context, musicBox, child) {
-                return SizedBox(
-                  height: 70,
+               
+                // Check if there are no playlists
+     if (musicBox.isEmpty) {
+  // Display a creative placeholder
+  return Center(
+    child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Image.asset(
+            'assets/noplaylist.jpg', // Replace with your creative image
+            height: 200,
+            width: 500,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: Text(
+                  "Oops! no playlists yet.\nStart creating and enjoying your music!",
+                  textAlign: TextAlign.center,
+                  style:  TextStyle(fontSize: 13, fontWeight: FontWeight.w300,color: Colors.white,  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    
+  );
+}
+
+ return SizedBox(
+                  height: 50,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: musicBox.length,
@@ -116,8 +148,8 @@ class HomeView extends GetView<HomeController> {
                               },
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: Image.asset('assets/images.jpeg',
-                                    height: 100, width: 150),
+                                child: Image.asset('assets/image2.jpeg',
+                                    height: 150, width: 200),
                               ),
                             ),
                             const SizedBox(height: 8),

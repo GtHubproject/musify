@@ -18,6 +18,8 @@ abstract class Routes {
   static const SELECTPLAYLIST = _Paths.SELECTPLAYLIST;
   static const NAMESELECTION = _Paths.NAMESELECTION;
   static const FULLPLAYER = _Paths.FULLPLAYER;
+  static const ARTISTSONG = _Paths.ARTISTSONG;
+  static const ALBUMSONG = _Paths.ALBUMSONG;
 }
 
 abstract class _Paths {
@@ -37,4 +39,6 @@ abstract class _Paths {
   static const SELECTPLAYLIST = '/selectplaylist';
   static const NAMESELECTION = '/selectplaylistname';
   static const FULLPLAYER = '/fullsongview';
+  static const ARTISTSONG = '/artistsong';
+  static const ALBUMSONG = '/albumSongsScreen';
 }

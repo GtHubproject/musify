@@ -105,7 +105,7 @@ import '../controllers/searchbar_controller.dart';
 
 
 
- //modfd
+ 
  
 class SearchbarView extends GetView<SearchbarController> {
 
@@ -117,7 +117,7 @@ class SearchbarView extends GetView<SearchbarController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(backgroundColor:   Color.fromARGB(255, 61, 21, 21),
         title: TextField(
           onChanged: (query) => controller.performSearch(query),
           decoration: InputDecoration(
@@ -155,12 +155,20 @@ class SearchbarView extends GetView<SearchbarController> {
                   itemCount: searchResults.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(searchResults[index].title),
-                      subtitle: Text(searchResults[index].artist ?? "No Artist"),
+                      title: Text(searchResults[index].title, style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black), ),
+                      subtitle: Text(searchResults[index].artist ?? "No Artist", style: TextStyle(
+                      fontWeight: FontWeight.w400, color: Colors.black),),
                       leading: QueryArtworkWidget(
                         controller: controller.audioQuery,
                         id: searchResults[index].id,
                         type: ArtworkType.AUDIO,
+                        nullArtworkWidget: Container(
+                    width: 50,
+                    height: 50,
+                    color: Color.fromARGB(235, 131, 83, 76),
+                    child: Icon(Icons.music_note),
+                  ),
                       ),
                       onTap: () {
                       bottomnavigationbarController.playSong(searchResults[index]);

@@ -3,7 +3,7 @@ import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomna
 import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'dart:io';
+
 import 'package:get/get.dart';
 
 class TracksView extends StatefulWidget {
@@ -14,9 +14,15 @@ class TracksView extends StatefulWidget {
 }
 
 class _TracksViewState extends State<TracksView> {
+
+
   final TrackController trackController = Get.put(TrackController());
+
+
   BottomnavigationbarController bottomnavigationbarController =
       Get.put(BottomnavigationbarController());
+
+      
   List<SongModel> _songs = [];
   bool _hasPermission = false;
 
@@ -44,7 +50,7 @@ class _TracksViewState extends State<TracksView> {
   Future<void> loadSongs() async {
     List<SongModel> songs = await trackController.querySongs();
     //for the minplayer playnext song feature
-    
+
      bottomnavigationbarController.setSongs(songs); // Set the list of songs
     setState(() {
       _songs = songs;
@@ -121,23 +127,19 @@ class _TracksViewState extends State<TracksView> {
                                     icon: Icon(Icons.add),
                                     onPressed: () {
                                       Navigator.pop(context);
+
+                                        SongModel selectedSong = getSelectedSong(song);
                                       //selectplaylistname
                                       Get.toNamed('/selectplaylistname',
                                           arguments: {
-                                            'selectedSong': _songs[index]
+                                          
+                                            'selectedSong': selectedSong
                                           });
 
                                       // Close the bottom sheet
                                     },
                                   ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () async {
-                                      _showDeleteConfirmationDialog(
-                                          _songs[index]);
-                                      // Navigator.pop( context); // Close the bottom sheet
-                                    },
-                                  ),
+                                 
                                 ],
                               ),
                             );
@@ -163,85 +165,10 @@ class _TracksViewState extends State<TracksView> {
       },
     );
   }
-
-  //delte
-  Future<void> _showDeleteConfirmationDialog(SongModel song) async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Delete Song'),
-          content: Text('Are you sure you want to delete this song?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                try {
-                  // Get the file path
-                  String filePath = song.data ?? '';
-                  // Check if the file exists
-                  File file = File(filePath);
-                  if (await file.exists()) {
-                    // Delete the file
-                    await file.delete();
-                    // Now you can remove the song from your list
-                    setState(() {
-                      _songs.removeWhere((s) => s.id == song.id);
-                    });
-                    // Close the dialog
-                    Navigator.of(context).pop();
-                  } else {
-                    // File doesn't exist
-                    print('File does not exist: $filePath');
-                    // Optionally, you can show a snackbar or display a message.
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Song file not found'),
-                        duration: Duration(seconds: 3),
-                      ),
-                    );
-                    // Close the dialog even if the file doesn't exist
-                    Navigator.of(context).pop();
-                  }
-                } catch (error) {
-                  // Handle errors during file deletion
-                  print('Error deleting file: $error');
-                  // Optionally, you can show a snackbar or display an error message.
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error deleting song: $error'),
-                      duration: Duration(seconds: 3),
-                    ),
-                  );
-                  // Close the dialog
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text('Delete'),
-            ),
-          ],
-        );
-      },
-    );
+SongModel getSelectedSong(SongModel song) {
+    // Logic to get or initialize the selected song
+    return song;
   }
-
-//miniplayer
-  // void _showBottomMediaBar(SongModel song) {
-  //   final bottomController = Get.find<BottomnavigationbarController>();
-
-  //   // Play the selected song
-  //   bottomController.playSong(song);
-  //   bottomnavigationbarController.update();
-  //   trackController.addRecentlyPlayed(song);
-
-  //   // Show the MiniPlayer widget in the BottomNavigationBar
-  //   //bottomController.changeIndex(1); // Assuming index 1 corresponds to the MiniPlayer in your BottomNavigationBar
-  // }
 
   Widget noAccessToLibraryWidget() {
     return Center(

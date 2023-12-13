@@ -9,6 +9,8 @@ import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/fullplay
 import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
 import 'package:musicplayer/app/modules/home/controllers/home_controller.dart';
 import 'package:musicplayer/app/modules/library/controllers/PlaylistNameSelectionController.dart';
+import 'package:musicplayer/app/modules/library/controllers/albumcontroller.dart';
+import 'package:musicplayer/app/modules/library/controllers/artistandsongcontroller.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:musicplayer/app/modules/playlists/controllers/playlist_selection_controller_controller.dart';
 import 'package:musicplayer/app/modules/playlists/controllers/playlists_controller.dart';
@@ -31,20 +33,22 @@ class AppBindings extends Bindings {
     Get.lazyPut<HomeController>(() => HomeController());
     Get.lazyPut<TrackController>(() => TrackController());
 
-    Get.put<PlaylistNameSelectionController>(
-         PlaylistNameSelectionController());
+    Get.lazyPut<ArtistSongsController>(
+        () => ArtistSongsController(Get.find<TrackController>()));
+
+   // Get.lazyPut<AlbumSongsController>( () => AlbumSongsController(Get.find<AlbumSongsController>()));
+
+    Get.put<PlaylistNameSelectionController>(PlaylistNameSelectionController());
 
     Get.lazyPut<FavouritesController>(() => FavouritesController());
 
     Get.lazyPut<FullSongplayerController>(() => FullSongplayerController());
     //for tracksview to play song
     Get.put<AudioPlayer>(AudioPlayer());
-
-  
   }
 }
-void main() async {
 
+void main() async {
   //hive
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
@@ -61,9 +65,6 @@ void main() async {
   await Hive.openBox<Music>('recently_played');
 
   Get.put(PlaylistSelectionController());
-
-
-  
   runApp(MyApp());
 }
 
@@ -79,17 +80,16 @@ class MyApp extends StatelessWidget {
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor:Colors.white,
-
+        scaffoldBackgroundColor: Colors.white,
         textTheme: ThemeData.dark().textTheme.copyWith(
-         // Set the text color to black for all text styles
-          bodyLarge: TextStyle(color: Colors.black),
-          bodyMedium: TextStyle(color: Colors.black),
-          displayLarge: TextStyle(color: Colors.black),
-          displayMedium: TextStyle(color: Colors.black),
-         // Add more text styles as needed
-        ),
-        ),
+              // Set the text color to black for all text styles
+              bodyLarge: TextStyle(color: Colors.black),
+              bodyMedium: TextStyle(color: Colors.black),
+              displayLarge: TextStyle(color: Colors.black),
+              displayMedium: TextStyle(color: Colors.black),
+              // Add more text styles as needed
+            ),
+      ),
     );
   }
 }

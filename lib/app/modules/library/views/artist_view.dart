@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-
-// Widget ArtistsView() {
-//   return ListView.builder(
-//     itemCount: 5,
-//     itemBuilder: (context, index) {
-//       return ListTile(
-//         title: Text('Artist $index'),
-//         trailing: Icon(Icons.arrow_forward),
-//         leading: Icon(Icons.person),
-//       );
-//     },
-//   );
-// }
 
 class ArtistsView extends StatefulWidget {
   @override
@@ -21,7 +9,6 @@ class ArtistsView extends StatefulWidget {
 
 class _ArtistsViewState extends State<ArtistsView> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
-
   bool _hasPermission = false;
 
   @override
@@ -30,22 +17,21 @@ class _ArtistsViewState extends State<ArtistsView> {
     checkAndRequestPermissions();
   }
 
-checkAndRequestPermissions({bool retry = false}) async {
-  bool hasPermission = await _audioQuery.checkAndRequest(retryRequest: retry);
-  if (hasPermission) {
-    setState(() {
-      _hasPermission = true;
-    });
+  checkAndRequestPermissions({bool retry = false}) async {
+    bool hasPermission = await _audioQuery.checkAndRequest(retryRequest: retry);
+    if (hasPermission) {
+      setState(() {
+        _hasPermission = true;
+      });
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child:!_hasPermission
-         ? noAccessToLibraryWidget()
+        child: !_hasPermission
+            ? noAccessToLibraryWidget()
             : FutureBuilder<List<ArtistModel>>(
                 future: _audioQuery.queryArtists(),
                 builder: (context, snapshot) {
@@ -65,17 +51,29 @@ checkAndRequestPermissions({bool retry = false}) async {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(snapshot.data![index].artist ?? "Unknown Artist"),
-                        subtitle:
-                              Text(snapshot.data![index].numberOfAlbums.toString()),
-                        trailing: const Icon(Icons.arrow_forward),
-                        leading: const Icon(Icons.person),
+                        title: Text(
+                          snapshot.data![index].artist,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                        subtitle: Text(
+                          snapshot.data![index].numberOfAlbums.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400, color: Colors.black),
+                        ),
+                        leading: const Icon(
+                          Icons.person,
+                          color: Colors.black,
+                        ),
+                        onTap: () {
+                          String artistName = snapshot.data![index].artist;
+                          Get.toNamed('/artistsong', arguments: artistName);
+                        },
                       );
                     },
                   );
                 },
-              )
-           
+              ),
       ),
     );
   }
@@ -96,4 +94,3 @@ checkAndRequestPermissions({bool retry = false}) async {
     );
   }
 }
-
