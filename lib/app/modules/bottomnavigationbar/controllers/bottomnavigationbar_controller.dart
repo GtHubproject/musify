@@ -8,13 +8,6 @@ class BottomnavigationbarController extends GetxController {
   Rx<SongModel?> currentSong = Rx<SongModel?>(null);
   List<SongModel> _songs = [];
 
-
-
-   
-
-  
-
-
   void changeIndex(int index) {
     selectedIndex.value = index;
   }
@@ -23,7 +16,11 @@ class BottomnavigationbarController extends GetxController {
   void onInit() {
     super.onInit();
     audioPlayer = AudioPlayer();
-    
+
+    // Listen for position changes  in the linear progressin indicator and update the UI
+    audioPlayer.positionStream.listen((position) {
+      update();
+    });
     update();
   }
 
@@ -33,8 +30,8 @@ class BottomnavigationbarController extends GetxController {
     currentSong.value = song; // Update the current song
     await audioPlayer.setUrl(song.data);
     await audioPlayer.play();
-    
-    update(); // Notify listeners
+    update();
+    // Notify listeners
   }
 
   // Add a method to pause the currently playing song
@@ -57,14 +54,15 @@ class BottomnavigationbarController extends GetxController {
     update(); // Notify listeners
   }
 
-   // Add a method to set the list of songs for nexet palying
+  // Add a method to set the list of songs for nexet palying
   void setSongs(List<SongModel> songs) {
     _songs = songs;
   }
 
   void playNextSong() {
     if (currentSong.value != null) {
-      int currentIndex = _songs.indexWhere((song) => song.id == currentSong.value!.id);
+      int currentIndex =
+          _songs.indexWhere((song) => song.id == currentSong.value!.id);
 
       if (currentIndex != -1 && currentIndex < _songs.length - 1) {
         // If the current song is not the last song in the list

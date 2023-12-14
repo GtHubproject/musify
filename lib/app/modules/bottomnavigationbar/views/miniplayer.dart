@@ -11,8 +11,10 @@ class MiniPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BottomnavigationbarController bottomController = Get.find();
+
     final trackController = Get.find<TrackController>();
-    //final currentSong = bottomController.currentSong.value;
+    
+   // final currentSong = bottomController.currentSong.value;
 
     return GetBuilder<BottomnavigationbarController>(
       builder: (controller) {
@@ -40,6 +42,9 @@ class MiniPlayer extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
+                   
+               
+
                     Row(
                       children: [
                         currentSong != null
@@ -55,6 +60,7 @@ class MiniPlayer extends StatelessWidget {
                                 ),
                               )
                             : Container(),
+
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,6 +91,7 @@ class MiniPlayer extends StatelessWidget {
                             ],
                           ),
                         ),
+
                         IconButton(
                           icon: Icon(bottomController.audioPlayer.playing
                               ? Icons.pause
@@ -114,6 +121,20 @@ class MiniPlayer extends StatelessWidget {
                         ),
                       ],
                     ),
+                    
+             Expanded(
+                            child: LinearProgressIndicator(
+                              value: bottomController.audioPlayer.position != null &&
+                                      bottomController.audioPlayer.duration != null
+                                  ? bottomController.audioPlayer.position.inMilliseconds /
+                                      bottomController.audioPlayer.duration!.inMilliseconds
+                                  : 0.0,
+                              minHeight: 8,
+                              backgroundColor: Colors.grey[800],
+                              valueColor: AlwaysStoppedAnimation<Color>(const Color.fromARGB(255, 235, 214, 153)),
+                            ),
+                          ),
+
                   ],
                 ),
               ),
@@ -124,3 +145,137 @@ class MiniPlayer extends StatelessWidget {
     );
   }
 }
+
+
+//blinking
+
+
+// class MiniPlayer extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final BottomnavigationbarController bottomController = Get.find();
+//     final trackController = Get.find<TrackController>();
+
+//     return StreamBuilder<Duration?>(
+//       stream: bottomController.audioPlayer.positionStream,
+//       builder: (context, snapshot) {
+//         final currentSong = bottomController.currentSong.value;
+
+//         if (currentSong == null) {
+//           return Container();
+//         }
+
+//         final position = snapshot.data ?? Duration.zero;
+//         final duration = bottomController.audioPlayer.duration ?? Duration.zero;
+//         final progress = position.inMilliseconds / duration.inMilliseconds;
+
+//         return Padding(
+//           padding: const EdgeInsets.all(8.0),
+//           child: GestureDetector(
+//             onTap: () {
+//               Get.toNamed('/fullsongview');
+//             },
+//             child: Container(
+//               height: 70,
+//               decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.circular(10.0),
+//                 color: const Color.fromARGB(255, 45, 31, 31),
+//               ),
+//               padding: const EdgeInsets.all(8.0),
+//               child: Column(
+//                 children: [
+//                   Row(
+//                     children: [
+//                       currentSong != null
+//                           ? Visibility(
+//   visible: bottomController.audioPlayer.playing, // Show only when a song is playing
+//   child: QueryArtworkWidget(
+//     controller: trackController.audioQuery,
+//     id: currentSong.id,
+//     type: ArtworkType.AUDIO,
+//     nullArtworkWidget: Container(
+//       width: 50,
+//       height: 42,
+//       color: Color.fromARGB(235, 131, 83, 76),
+//       child: Icon(Icons.music_note),
+//     ),
+//   ),
+// )
+//                           : Container(),
+//                       Expanded(
+//                         child: Column(
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             SizedBox(
+//                               height: 20,
+//                               child: Marquee(
+//                                 text: currentSong != null
+//                                     ? 'Now Playing: ${currentSong.title}'
+//                                     : 'No song playing',
+//                                 style: TextStyle(
+//                                   fontWeight: FontWeight.bold,
+//                                   color: Colors.amber[200],
+//                                 ),
+//                               ),
+//                             ),
+//                             SizedBox(
+//                               height: 20,
+//                               child: Marquee(
+//                                 text: currentSong != null
+//                                     ? 'Artist: ${currentSong.artist ?? "Unknown"}'
+//                                     : '',
+//                                 style: TextStyle(
+//                                   fontWeight: FontWeight.w300,
+//                                   color: Colors.amber[200],
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                       IconButton(
+//                         icon: Icon(bottomController.audioPlayer.playing
+//                             ? Icons.pause
+//                             : Icons.play_arrow),
+//                         onPressed: () {
+//                           if (bottomController.audioPlayer.playing) {
+//                             bottomController.pauseSong();
+//                           } else {
+//                             bottomController.audioPlayer.play();
+//                           }
+//                           bottomController.update();
+//                         },
+//                       ),
+//                       IconButton(
+//                         icon: Icon(Icons.skip_next),
+//                         onPressed: () {
+//                           bottomController.playNextSong();
+//                         },
+//                       ),
+//                       IconButton(
+//                         icon: Icon(Icons.stop),
+//                         onPressed: () {
+//                           bottomController.stopSong();
+//                           bottomController.update();
+//                         },
+//                       ),
+//                     ],
+//                   ),
+//                   LinearProgressIndicator(
+//                     value: progress,
+//                     minHeight: 8,
+//                     backgroundColor: Colors.grey,
+//                     valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
+
+
+

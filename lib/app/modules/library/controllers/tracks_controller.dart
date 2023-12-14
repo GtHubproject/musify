@@ -25,7 +25,11 @@ class TrackController extends GetxController {
   List<SongModel> _songs = [];
 
   List<SongModel> get songs => _songs;
+
   // Hive box for storing favorite songs
+
+//for playlists
+  SongModel? selectedSong;
 
   @override
   void onInit() async {
@@ -41,6 +45,11 @@ class TrackController extends GetxController {
 
     //Create the ValueNotifier and pass it to the FavoritesScreen
     boxChangeListener = ValueNotifier<int>(0);
+  }
+
+//for adding to playlist
+  SongModel? getSelectedSong() {
+    return selectedSong;
   }
 
   Future<bool> checkPermission() async {

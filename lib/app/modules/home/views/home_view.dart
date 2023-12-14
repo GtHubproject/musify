@@ -81,8 +81,6 @@ class HomeView extends GetView<HomeController> {
                   },
                 ),
               ],
-
-              
             ),
           ),
 
@@ -91,39 +89,41 @@ class HomeView extends GetView<HomeController> {
             child: ValueListenableBuilder(
               valueListenable: controller.musicBox.listenable(),
               builder: (context, musicBox, child) {
-               
-                // Check if there are no playlists
-     if (musicBox.isEmpty) {
-  // Display a creative placeholder
-  return Center(
-    child: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          Image.asset(
-            'assets/noplaylist.jpg', // Replace with your creative image
-            height: 200,
-            width: 500,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 50),
-                child: Text(
-                  "Oops! no playlists yet.\nStart creating and enjoying your music!",
-                  textAlign: TextAlign.center,
-                  style:  TextStyle(fontSize: 13, fontWeight: FontWeight.w300,color: Colors.white,  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    
-  );
-}
+                // before craeting playlists
 
- return SizedBox(
+                if (musicBox.isEmpty) {
+                  return Center(
+                    child: Stack(
+                      alignment: Alignment.topCenter,
+                      children: [
+                        Image.asset(
+                          'assets/noplaylist.jpg', // Replace with your creative image
+                          height: 200,
+                          width: 500,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 50),
+                              child: Text(
+                                "Oops! no playlists yet.\nStart creating and enjoying your music!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }
+//after adding playlists
+                return SizedBox(
                   height: 50,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -192,13 +192,15 @@ class HomeView extends GetView<HomeController> {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(backgroundColor: Color.fromARGB(255, 242, 234, 190),surfaceTintColor: const Color.fromARGB(255, 191, 16, 16),
+        return AlertDialog(
+          backgroundColor:  Color.fromARGB(255, 228, 235, 192),
+          surfaceTintColor: const Color.fromARGB(255, 191, 16, 16),
           title: Text("Create Playlist"),
           content: TextField(
             onChanged: (value) {
               playlistName = value;
             },
-            decoration: InputDecoration(labelText: "Playlist Name"),
+            decoration: InputDecoration(labelText: "Playlist Name",),
           ),
           actions: <Widget>[
             TextButton(

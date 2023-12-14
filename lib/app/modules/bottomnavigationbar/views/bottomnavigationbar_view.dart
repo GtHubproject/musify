@@ -25,7 +25,6 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
     SearchbarView(),
     const LibraryView(),
     FavouritesView(),
-    //const ProfileView(),
   ];
   @override
   Widget build(BuildContext context) {

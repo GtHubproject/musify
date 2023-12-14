@@ -144,8 +144,10 @@ class FavouritesView extends GetView<FavouritesController> {
             var song = favoriteSongs[index];
 
             return ListTile(
-              title: Text(song.title),
-              subtitle: Text(song.artist ?? 'No Artist'),
+              title: Text(song.title,style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),),
+              subtitle: Text(song.artist ?? 'No Artist', style: TextStyle(
+                      fontWeight: FontWeight.w400, color: Colors.black),),
               trailing: IconButton(
                 icon: Icon(Icons.favorite, color: Colors.red),
                 onPressed: () {

@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
 import 'package:musicplayer/app/modules/library/controllers/artistandsongcontroller.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 
 
 class ArtistSongsScreen extends GetView<ArtistSongsController> {
-  final ArtistSongsController trackController =
+  
+  final ArtistSongsController artistSongsController =
       Get.put(ArtistSongsController(Get.find<TrackController>()));
 
+
+
+  BottomnavigationbarController bottomnavigationbarController =
+      Get.put(BottomnavigationbarController());
+
+    final TrackController trackController = Get.put(TrackController());  
+
+      
   @override
   Widget build(BuildContext context) {
     final String artistName = Get.arguments as String;
@@ -40,10 +50,20 @@ class ArtistSongsScreen extends GetView<ArtistSongsController> {
                 itemBuilder: (context, index) {
                   var song = controller.songs[index];
                   return ListTile(
+
+
                     title: Text(song.title,  style: TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.black),),
                     subtitle: Text(artistName,style: TextStyle(
                       fontWeight: FontWeight.w400, color: Colors.black),),
+onTap:(){
+   bottomnavigationbarController.playSong(song);
+      bottomnavigationbarController.setCurrentSong(song);
+     bottomnavigationbarController.update();
+       trackController.addRecentlyPlayed(song);
+    //  trackController.addRecentlyPlayed(song);
+},
+                      
                     // Add other necessary UI components
                   );
                 },

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
 import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
+import 'package:musicplayer/app/modules/library/views/PlaylistNameSelectionView.dart';
+
 import 'package:on_audio_query/on_audio_query.dart';
 
 import 'package:get/get.dart';
@@ -14,15 +16,11 @@ class TracksView extends StatefulWidget {
 }
 
 class _TracksViewState extends State<TracksView> {
-
-
   final TrackController trackController = Get.put(TrackController());
-
 
   BottomnavigationbarController bottomnavigationbarController =
       Get.put(BottomnavigationbarController());
 
-      
   List<SongModel> _songs = [];
   bool _hasPermission = false;
 
@@ -51,11 +49,21 @@ class _TracksViewState extends State<TracksView> {
     List<SongModel> songs = await trackController.querySongs();
     //for the minplayer playnext song feature
 
-     bottomnavigationbarController.setSongs(songs); // Set the list of songs
+    bottomnavigationbarController.setSongs(songs); // Set the list of songs
     setState(() {
       _songs = songs;
     });
   }
+
+//for addin playlist
+ Future<void> addToPlaylist(SongModel selectedSong) async {
+    // Navigate to the playlist selection screen
+    await Get.to(() => PlaylistNameSelectionView());
+
+    // The PlaylistNameSelectionController will handle adding the song to the selected playlist
+  }
+
+
 
   Widget _buildTrackList() {
     return FutureBuilder<List<SongModel>>(
@@ -98,6 +106,7 @@ class _TracksViewState extends State<TracksView> {
                         Icons.more_vert,
                         color: Colors.brown,
                       ), // More Vert Icon
+
                       onPressed: () {
                         showModalBottomSheet(
                           context: context,
@@ -125,21 +134,16 @@ class _TracksViewState extends State<TracksView> {
                                   ),
                                   IconButton(
                                     icon: Icon(Icons.add),
-                                    onPressed: () {
-                                      Navigator.pop(context);
+                                    onPressed: ()async {
 
-                                        SongModel selectedSong = getSelectedSong(song);
-                                      //selectplaylistname
-                                      Get.toNamed('/selectplaylistname',
-                                          arguments: {
-                                          
-                                            'selectedSong': selectedSong
-                                          });
+                                      // Set the selected song when Add is pressed
+                             trackController.selectedSong = song;
+                                      await addToPlaylist(_songs[index]);
+                                      Navigator.pop(context);
 
                                       // Close the bottom sheet
                                     },
                                   ),
-                                 
                                 ],
                               ),
                             );
@@ -149,10 +153,11 @@ class _TracksViewState extends State<TracksView> {
                     ),
                   ],
                 ),
-                onTap: () { bottomnavigationbarController.playSong(_songs[index]);
-               //   _showBottomMediaBar(_songs[index]);
-                   
-                 // bottomnavigationbarController.playSong(_songs[index]);
+                onTap: () {
+                  bottomnavigationbarController.playSong(_songs[index]);
+                  //   _showBottomMediaBar(_songs[index]);
+
+                  // bottomnavigationbarController.playSong(_songs[index]);
                   bottomnavigationbarController.update();
                   trackController.addRecentlyPlayed(_songs[index]);
                 },
@@ -165,10 +170,22 @@ class _TracksViewState extends State<TracksView> {
       },
     );
   }
-SongModel getSelectedSong(SongModel song) {
+
+  SongModel getSelectedSong(SongModel song) {
     // Logic to get or initialize the selected song
     return song;
   }
+
+// void _showAddToPlaylistDialog(BuildContext context, SongModel selectedSong) {
+//   showModalBottomSheet(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return Container(
+//        child:PlaylistNameListingView(selectedSong: selectedSong),
+//       );
+//     },
+//   );
+// }
 
   Widget noAccessToLibraryWidget() {
     return Center(
