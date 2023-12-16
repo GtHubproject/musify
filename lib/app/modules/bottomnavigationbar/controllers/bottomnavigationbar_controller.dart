@@ -21,6 +21,8 @@ class BottomnavigationbarController extends GetxController {
     audioPlayer.positionStream.listen((position) {
       update();
     });
+    
+
     update();
   }
 
@@ -58,6 +60,8 @@ class BottomnavigationbarController extends GetxController {
   void setSongs(List<SongModel> songs) {
     _songs = songs;
   }
+
+
 
   void playNextSong() {
     if (currentSong.value != null) {

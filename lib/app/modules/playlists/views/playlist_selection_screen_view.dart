@@ -39,8 +39,10 @@ class PlaylistSelectionView extends GetView<PlaylistSelectionController> {
             final SongModel selectedSong = songs[index];
 
             return ListTile(
-              title: Text(selectedSong.title),
-              subtitle: Text(selectedSong.artist ?? "No Artist"),
+              title: Text(selectedSong.title, style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),),
+              subtitle: Text(selectedSong.artist ?? "No Artist", style: TextStyle(
+                      fontWeight: FontWeight.w400, color: Colors.black),),
                trailing: GestureDetector(
             onTap: () async {
               // Get the selected playlist name from the navigation arguments

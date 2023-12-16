@@ -195,19 +195,29 @@ class HomeView extends GetView<HomeController> {
         return AlertDialog(
           backgroundColor:  Color.fromARGB(255, 228, 235, 192),
           surfaceTintColor: const Color.fromARGB(255, 191, 16, 16),
-          title: Text("Create Playlist"),
+          title: Text("Create Playlist",style: TextStyle(color: Colors.brown,fontWeight: FontWeight.bold)),
           content: TextField(
             onChanged: (value) {
               playlistName = value;
             },
-            decoration: InputDecoration(labelText: "Playlist Name",),
+            decoration: InputDecoration(
+              labelText: "Playlist Name",
+             // hintStyle: TextStyle(color: const Color.fromARGB(255, 230, 197, 197)),
+               labelStyle: TextStyle(color: Colors.brown),
+               focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: const Color.fromARGB(255, 237, 234, 233)),
+    ),
+    
+
+              ),
+              style:  TextStyle(color: const Color.fromARGB(255, 237, 234, 233)), // Text color while typing
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Cancel',style: TextStyle(color: Colors.brown),),
             ),
             TextButton(
               onPressed: () async {
@@ -216,7 +226,7 @@ class HomeView extends GetView<HomeController> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text('Create'),
+              child: Text('Create',style: TextStyle(color: Colors.brown)),
             ),
           ],
         );

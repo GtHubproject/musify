@@ -81,12 +81,7 @@ class PlaylistDisplayView extends GetView<PlaylistDisplayController> {
         // Retrieve the selected playlist from the box
         Music? playlist = musicBox.get(controller.playlistName);
 
-        // if (playlist?.songs == null || playlist?.songs.isEmpty == true) {
-        //   // Handle null or empty playlist
-        //   return Center(
-        //     child: Text('Playlist is empty'),
-        //   );
-        // }
+      
 
 
         return ListView.builder(
@@ -96,20 +91,20 @@ class PlaylistDisplayView extends GetView<PlaylistDisplayController> {
 
             return ListTile(
               onTap: () {
-                
-
-                bottomnavigationbarController.playSong(song);
+                 bottomnavigationbarController.playSong(song);
                  // Update the current song in bottomnavigationbarController
            bottomnavigationbarController.setCurrentSong(song);
                 bottomnavigationbarController.update();
                 trackController.addRecentlyPlayed(song);
               },
 
-              title: Text(song.title),
-              subtitle: Text(song.artist ?? "No Artist"),
+              title: Text(song.title, style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),),
+              subtitle: Text(song.artist ?? "No Artist"  ,style: TextStyle(
+                      fontWeight: FontWeight.w400, color: Colors.black),),
 
               trailing: IconButton(
-                icon: Icon(Icons.delete),
+                icon: Icon(Icons.delete ,color: Color.fromARGB(255, 247, 150, 112)),
                 onPressed: () {
                   controller.removeSongFromPlaylist(song);
                 },

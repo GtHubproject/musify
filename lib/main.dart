@@ -24,8 +24,7 @@ class AppBindings extends Bindings {
     Get.lazyPut<SearchbarController>(() => SearchbarController());
     Get.lazyPut<BottomnavigationbarController>(
         () => BottomnavigationbarController());
-
-    // Playlist bindings
+   // Playlist bindings
     Get.lazyPut<PlaylistSelectionController>(
         () => PlaylistSelectionController());
     Get.lazyPut<PlaylistDisplayController>(() => PlaylistDisplayController());

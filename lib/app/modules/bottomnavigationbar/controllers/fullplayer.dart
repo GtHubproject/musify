@@ -1,5 +1,3 @@
-
-
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
@@ -7,11 +5,18 @@ import 'package:musicplayer/app/modules/library/controllers/tracks_controller.da
 import 'package:on_audio_query/on_audio_query.dart';
 
 class FullSongplayerController extends GetxController {
-
-  
   late TrackController trackController;
   late BottomnavigationbarController bottomController;
   late AudioPlayer audioPlayer;
+
+  SongModel? get currentSong => bottomController.currentSong.value;
+
+
+  bool _isShuffle = false;
+  bool get isShuffle => _isShuffle;
+
+  bool _isRepeat = false;
+  bool get isRepeat => _isRepeat;
 
   @override
   void onInit() {
@@ -20,8 +25,6 @@ class FullSongplayerController extends GetxController {
     bottomController = Get.find<BottomnavigationbarController>();
     audioPlayer = bottomController.audioPlayer;
   }
-
-  SongModel? get currentSong => bottomController.currentSong.value;
 
   void seekTo(double seconds) {
     bottomController.audioPlayer.seek(Duration(seconds: seconds.toInt()));
@@ -37,7 +40,17 @@ class FullSongplayerController extends GetxController {
   }
 
   void playNextSong() {
-   
+    bottomController.playNextSong();
+    update();
+  }
+
+   void toggleShuffle() {
+    _isShuffle = !_isShuffle;
+    update();
+  }
+
+  void toggleRepeat() {
+    _isRepeat = !_isRepeat;
     update();
   }
 
@@ -47,9 +60,8 @@ class FullSongplayerController extends GetxController {
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "$twoDigitMinutes:$twoDigitSeconds";
   }
-   void updateProgress() {
+
+  void updateProgress() {
     update();
   }
-
-  
 }

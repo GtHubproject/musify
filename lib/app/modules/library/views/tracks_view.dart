@@ -175,18 +175,6 @@ class _TracksViewState extends State<TracksView> {
     // Logic to get or initialize the selected song
     return song;
   }
-
-// void _showAddToPlaylistDialog(BuildContext context, SongModel selectedSong) {
-//   showModalBottomSheet(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return Container(
-//        child:PlaylistNameListingView(selectedSong: selectedSong),
-//       );
-//     },
-//   );
-// }
-
   Widget noAccessToLibraryWidget() {
     return Center(
       child: Column(

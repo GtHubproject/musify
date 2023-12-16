@@ -21,14 +21,10 @@ class TrackController extends GetxController {
   final int maxRecentlyPlayed =
       10; // Adjust the number of recently played songs to store
 
-  //deelte song
-  List<SongModel> _songs = [];
-
-  List<SongModel> get songs => _songs;
 
   // Hive box for storing favorite songs
 
-//for playlists
+//for  adding song into playlists  from tracks
   SongModel? selectedSong;
 
   @override
@@ -71,50 +67,57 @@ class TrackController extends GetxController {
   }
 
   // Method to add a song to the favorites Hive box
+  // void addToFavorites(SongModel song) {
+  //   try {
+  //     // Get the existing favorites or create a new one
+  //     Music favorites =
+  //         favoritesBox.get('favorites', defaultValue: Music(songs: []))!;
+
+  //     // Add the song to the favorites
+  //     favorites.songs.add(song);
+
+  //     // Save the updated favorites back to the Hive box
+  //     favoritesBox.put('favorites', favorites);
+  //     update();
+
+  //     // Trigger a rebuild in the FavoritesScreen
+
+  //     boxChangeListener.value++;
+  //     print("added");
+
+  //   }
+  //    catch (e) {
+      
+  //     print('Error adding song to favorites: $e');
+  //     }
+  // }
+
+
   void addToFavorites(SongModel song) {
-    try {
-      // Get the existing favorites or create a new one
-      Music favorites =
-          favoritesBox.get('favorites', defaultValue: Music(songs: []))!;
+  try {
+    Music favorites = favoritesBox.get('favorites', defaultValue: Music(songs: []))!;
+    print("Existing favorites: ${favorites.songs}");
 
-      // Add the song to the favorites
+    if (!favorites.songs.contains(song)) {
       favorites.songs.add(song);
+      print("Song added: ${song.title}");
 
-      // Save the updated favorites back to the Hive box
       favoritesBox.put('favorites', favorites);
       update();
-      // Trigger a rebuild in the FavoritesScreen
       boxChangeListener.value++;
-      print("added");
-    } catch (e) {
-      // Handle exceptions, e.g., log the error or show a user-friendly message
-      print('Error adding song to favorites: $e');
-      // You can also rethrow the exception if needed
-      // rethrow;
+      print("Favorites after update: ${favoritesBox.get('favorites')}");
+    } else {
+      print("Song is already in favorites");
     }
+  } catch (e) {
+    print('Error adding song to favorites: $e');
   }
+}
 
   Future<void> playSong(SongModel song) async {
     await audioPlayer.stop();
     await audioPlayer.setUrl(song.data);
     await audioPlayer.play();
-  }
-
-  Future<void> deleteSong(String songId) async {
-    print('Deleting song with ID: $songId');
-
-    // Assuming there is no direct method to delete by ID
-    // Fetch the updated list of songs excluding the one to be deleted
-    List<SongModel> updatedSongs = await querySongs();
-    updatedSongs.removeWhere((song) => song.id == songId);
-
-    // Update the local list of songs
-    _songs = updatedSongs;
-
-    // Trigger a rebuild
-    update();
-
-    print('Song deleted. Songs after deletion: $_songs');
   }
 
   Future<void> addRecentlyPlayed(SongModel song) async {
