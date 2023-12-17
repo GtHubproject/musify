@@ -16,8 +16,12 @@ class PlaylistSelectionController extends GetxController {
     // Check if the playlist is null, if so, provide a default value
     Music playlist = playlistNullable ?? Music(songs: []);
 
-    // Add songs to the playlist
-    playlist.songs.addAll(songs);
+    // Check for duplicates and add only non-duplicate songs
+  for (var song in songs) {
+    if (!playlist.songs.contains(song)) {
+      playlist.songs.add(song);
+    }
+  }
 
     // Save the updated playlist back to the box
     await musicBox.put(playlistName, playlist);

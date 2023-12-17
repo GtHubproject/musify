@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+//import 'package:audioplayers/audioplayers.dart';
 
 class BottomnavigationbarController extends GetxController {
   var selectedIndex = 0.obs;
@@ -51,6 +52,13 @@ class BottomnavigationbarController extends GetxController {
     update();
   }
 
+  void shuffleSongs() {
+    if (_songs.isNotEmpty) {
+      _songs.shuffle();
+      update();
+    }
+  }
+
   void setCurrentSong(SongModel song) {
     currentSong.value = song;
     update(); // Notify listeners
@@ -78,4 +86,43 @@ class BottomnavigationbarController extends GetxController {
       }
     }
   }
+
+
+
+   // Update this method to play the selected song from a list
+  // Update this method to play the selected song from a list
+  void playSongFromList(SongModel selectedSong, List<SongModel> songList) {
+    setCurrentSong(selectedSong);
+
+    // Find the index of the selected song in the provided list
+    int currentIndex = songList.indexWhere((song) => song.id == selectedSong.id);
+
+    // Ensure that the selected song is found in the list
+    if (currentIndex != -1) {
+      _songs = List.from(songList); // Copy the list to ensure independence
+
+      // Play the selected song
+      playSong(selectedSong);
+
+    // Listen for changes in player state to detect when the song completes
+      audioPlayer.playerStateStream.listen((PlayerState state) {
+        if (state.processingState == ProcessingState.completed) {
+          playNextSong();
+        }
+      });
+
+      // If the selected song is not the last in the list, update the list
+      if (currentIndex < _songs.length - 1) {
+        _songs = _songs.sublist(currentIndex);
+      } else {
+        // If the selected song is the last, play the first song
+        _songs = List.from(songList);
+      }
+    } else {
+      // Handle the case when the selected song is not found in the list
+      print('Selected song not found in the provided list.');
+    }
+  }
+
+
 }

@@ -9,14 +9,16 @@ class FullSongplayerController extends GetxController {
   late BottomnavigationbarController bottomController;
   late AudioPlayer audioPlayer;
 
+   RxBool _isShuffle = false.obs;
+  bool get isShuffle => _isShuffle.value;
+
+RxBool _isRepeat = false.obs;
+ bool get isRepeat => _isRepeat.value;
+
   SongModel? get currentSong => bottomController.currentSong.value;
 
 
-  bool _isShuffle = false;
-  bool get isShuffle => _isShuffle;
 
-  bool _isRepeat = false;
-  bool get isRepeat => _isRepeat;
 
   @override
   void onInit() {
@@ -40,19 +42,48 @@ class FullSongplayerController extends GetxController {
   }
 
   void playNextSong() {
+  if (_isShuffle.value) {
+      // Shuffle the song list and play the next shuffled song
+      bottomController.shuffleSongs();
+    } else if (_isRepeat.value) {
+      // If repeat is enabled, play the current song again
+      bottomController.playSong(currentSong!);
+    } else {
+      // Play the next song in order
+      bottomController.playNextSong();
+    }
+    update();
+  }
+
+
+
+  void toggleShuffle() {
+  _isShuffle.value = !_isShuffle.value;
+  bottomController.audioPlayer.setShuffleModeEnabled(_isShuffle.value);
+  if (_isShuffle.value) {
+    // If shuffling is enabled, play the first shuffled song
+    bottomController.shuffleSongs();
+  } else {
+    // If shuffling is disabled, play the next song in order
     bottomController.playNextSong();
-    update();
   }
+  update();
+}
 
-   void toggleShuffle() {
-    _isShuffle = !_isShuffle;
-    update();
-  }
 
-  void toggleRepeat() {
-    _isRepeat = !_isRepeat;
-    update();
+ void toggleRepeat() {
+  _isRepeat.value = !_isRepeat.value;
+  if (_isRepeat.value) {
+    // Set the loop mode to one to repeat the current song
+    bottomController.audioPlayer.setLoopMode(LoopMode.one);
+  } else {
+    // Set the loop mode to none to play the next song in order
+    bottomController.audioPlayer.setLoopMode(LoopMode.off);
   }
+  update();
+}
+
+ 
 
   String formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");

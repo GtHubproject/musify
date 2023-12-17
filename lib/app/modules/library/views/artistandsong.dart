@@ -57,8 +57,8 @@ class ArtistSongsScreen extends GetView<ArtistSongsController> {
                     subtitle: Text(artistName,style: TextStyle(
                       fontWeight: FontWeight.w400, color: Colors.black),),
 onTap:(){
-   bottomnavigationbarController.playSong(song);
-      bottomnavigationbarController.setCurrentSong(song);
+   bottomnavigationbarController.playSongFromList(song ,controller.songs);
+     // bottomnavigationbarController.setCurrentSong(song);
      bottomnavigationbarController.update();
        trackController.addRecentlyPlayed(song);
     //  trackController.addRecentlyPlayed(song);

@@ -50,7 +50,8 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
               ),
             ),
             SizedBox(height: 16),
-            Row( mainAxisAlignment: MainAxisAlignment.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
                     onPressed: () {
@@ -60,27 +61,27 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
                       // Notify the FavoritesController to trigger a rebuild
                       Get.find<FavouritesController>().update();
                     },
-                    icon: Icon(Icons.favorite_border,color: const Color.fromARGB(255, 25, 24, 24),)),
-
-
- Obx(() =>
-                Text(
-                  controller.currentSong?.title ?? '',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    
-                    fontSize: 18,
+                    icon: Icon(
+                      Icons.favorite_border,
+                      color: const Color.fromARGB(255, 25, 24, 24),
+                    )),
+                Obx(
+                  () => Text(
+                    controller.currentSong?.title ?? '',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
-                ),)
-
+                )
               ],
             ),
-
-             Obx(() =>
-            Text(
-              controller.currentSong?.artist ?? 'Unknown Artist',
-              style: TextStyle(fontSize: 16),
-            ),),
+            Obx(
+              () => Text(
+                controller.currentSong?.artist ?? 'Unknown Artist',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
             SizedBox(height: 16),
             Stack(
               alignment: Alignment.centerLeft,
@@ -96,7 +97,8 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
                           : 0.0,
                   minHeight: 8,
                   backgroundColor: const Color.fromARGB(255, 35, 34, 34),
-                  valueColor: AlwaysStoppedAnimation<Color>(const Color.fromARGB(255, 202, 187, 140)),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      const Color.fromARGB(255, 202, 187, 140)),
                 ),
                 //),
               ],
@@ -105,37 +107,42 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                IconButton(
+                Obx(() => IconButton(
                   icon: Icon(Icons.shuffle),
-                   color: controller.isShuffle ? Colors.amber : Colors.black,
+                  color: controller.isShuffle ? Colors.amber : Colors.black,
                   onPressed: () {
                      controller.toggleShuffle();
                   },
-                ),
+                ),),
                 IconButton(
-                  icon: Icon(controller.audioPlayer.playing
-                      ? Icons.pause
-                      : Icons.play_arrow,
-                       color: controller.audioPlayer.playing ? Color.fromARGB(255, 162, 144, 70) : const Color.fromARGB(255, 79, 25, 21),
-                      ),
+                  icon: Icon(
+                    controller.audioPlayer.playing
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                    color: controller.audioPlayer.playing
+                        ? Color.fromARGB(255, 162, 144, 70)
+                        : const Color.fromARGB(255, 79, 25, 21),
+                  ),
                   onPressed: () {
                     controller.togglePlayPause();
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.skip_next,color: Colors.black,),
+                  icon: Icon(
+                    Icons.skip_next,
+                    color: Colors.black,
+                  ),
                   onPressed: () {
                     controller.playNextSong();
-                    
                   },
                 ),
-                IconButton(
+               Obx(() =>  IconButton(
                   icon: Icon(Icons.repeat),
-                   color: controller.isRepeat ? Colors.amber :Colors.black,
+                  color: controller.isRepeat ? Colors.amber : Colors.black,
                   onPressed: () {
-                      controller.toggleRepeat();
+                   controller.toggleRepeat();
                   },
-                ),
+                ),)
               ],
             ),
           ],

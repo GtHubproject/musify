@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:musicplayer/app/data/model/song_model.dart';
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
+import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 import '../controllers/favourites_controller.dart';
@@ -16,6 +17,9 @@ class FavouritesView extends GetView<FavouritesController> {
 
   BottomnavigationbarController bottomnavigationbarController =
       Get.put(BottomnavigationbarController());
+
+       final TrackController trackController = Get.put(TrackController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +68,9 @@ class FavouritesView extends GetView<FavouritesController> {
                 },
               ),
               onTap: () {
-                bottomnavigationbarController.playSong(song);
+                bottomnavigationbarController.playSongFromList(song, favoriteSongs);
+                trackController.addRecentlyPlayed(song);
+
               },
             );
           },

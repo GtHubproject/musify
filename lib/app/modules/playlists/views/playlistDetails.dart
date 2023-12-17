@@ -91,9 +91,9 @@ class PlaylistDisplayView extends GetView<PlaylistDisplayController> {
 
             return ListTile(
               onTap: () {
-                 bottomnavigationbarController.playSong(song);
+                  bottomnavigationbarController.playSongFromList(song, playlist.songs);
                  // Update the current song in bottomnavigationbarController
-           bottomnavigationbarController.setCurrentSong(song);
+          // bottomnavigationbarController.setCurrentSong(song);
                 bottomnavigationbarController.update();
                 trackController.addRecentlyPlayed(song);
               },

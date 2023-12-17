@@ -120,6 +120,8 @@ class TrackController extends GetxController {
     await audioPlayer.play();
   }
 
+
+
   Future<void> addRecentlyPlayed(SongModel song) async {
     try {
       // Get the existing recently played songs or create a new one

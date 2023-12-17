@@ -153,8 +153,13 @@ class _TracksViewState extends State<TracksView> {
                     ),
                   ],
                 ),
-                onTap: () {
-                  bottomnavigationbarController.playSong(_songs[index]);
+                onTap: () async{
+                   if (_songs.isEmpty) {
+                  await loadSongs();
+                }
+
+
+                 bottomnavigationbarController.playSongFromList(song, _songs);
                   //   _showBottomMediaBar(_songs[index]);
 
                   // bottomnavigationbarController.playSong(_songs[index]);

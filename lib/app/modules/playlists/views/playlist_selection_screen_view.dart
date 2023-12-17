@@ -55,11 +55,23 @@ class PlaylistSelectionView extends GetView<PlaylistSelectionController> {
               await controller.addSongsToPlaylist(playlistName, [selectedSong]);
               
               // Optionally, show a snackbar or toast to indicate success
-              Get.snackbar("Song Added", "${selectedSong.title} added to $playlistName");
+              Get.snackbar("Song Added", "${selectedSong.title} added to $playlistName",
+                backgroundColor: Color.fromARGB(255, 203, 203, 165)
+              );
             },
-            child: Icon(
-              Icons.add,
-            ),
+            child: Container(
+  width: 24.0, // Set the desired width (adjust as needed)
+  height: 24.0, // Set the desired height (adjust as needed)
+  decoration: BoxDecoration(
+    color: Color.fromARGB(255, 195, 113, 81), // Set the background color to yellow
+    borderRadius: BorderRadius.circular(4.0), // Set the border radius for rounded corners
+  ),
+  child: Icon(
+    Icons.add,
+    color: const Color.fromARGB(255, 250, 250, 250), // Optionally, set the color of the icon
+  ),
+)
+
           ),
           onTap: () {
             // ... Existing code ...
