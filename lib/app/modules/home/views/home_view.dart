@@ -128,6 +128,7 @@ class HomeView extends GetView<HomeController> {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: musicBox.length,
+                    padding: EdgeInsets.zero,
                     itemBuilder: (context, index) {
                       String playlistName = musicBox.keyAt(index);
 
@@ -149,7 +150,7 @@ class HomeView extends GetView<HomeController> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset('assets/image2.jpeg',
-                                    height: 150, width: 200),
+                                    height: 150, width: 150),
                               ),
                             ),
                             const SizedBox(height: 8),

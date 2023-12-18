@@ -11,9 +11,10 @@ class LibraryView extends GetView<LibraryController> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(centerTitle: true,
+        backgroundColor:  Color.fromARGB(255, 63, 29, 29),
           title: Text('Library'),
           bottom: TabBar(
             indicatorColor: const Color.fromARGB(255, 253, 242, 139),
@@ -22,7 +23,7 @@ class LibraryView extends GetView<LibraryController> {
             tabs: [
               Tab(text: 'Tracks'),
               Tab(text: 'Artists'),
-              Tab(text: 'Albums'),
+             // Tab(text: 'Albums'),
             ],
           ),
         ),
@@ -30,7 +31,7 @@ class LibraryView extends GetView<LibraryController> {
           children: [
             _buildTracks(), // Using the TracksView widget
             _buildArtists(), // Using the ArtistsView widget
-            _buildAlbums(), // Using the AlbumsView widget
+           // _buildAlbums(), // Using the AlbumsView widget
           ],
         ),
       ),
@@ -45,7 +46,7 @@ class LibraryView extends GetView<LibraryController> {
     return ArtistsView();
   }
 
-  Widget _buildAlbums() {
-    return AlbumsView();
-  }
+  // Widget _buildAlbums() {
+  //   return AlbumsView();
+  // }
 }

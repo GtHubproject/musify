@@ -111,14 +111,14 @@ class _TracksViewState extends State<TracksView> {
                         showModalBottomSheet(
                           context: context,
                           builder: (BuildContext context) {
-                            return Container(
+                            return Container(color: const Color.fromARGB(255, 216, 209, 149),
                               padding: EdgeInsets.all(16.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   IconButton(
-                                    icon: Icon(Icons.favorite),
+                                    icon: Icon(Icons.favorite,color: Colors.white),
                                     onPressed: () {
                                       // Call the addToFavorites method from the TracksController
                                       trackController.addToFavorites(song);
@@ -129,11 +129,12 @@ class _TracksViewState extends State<TracksView> {
                                       //controller.addToFavorites(song);
 
                                       Navigator.pop(
+
                                           context); // Close the bottom sheet
                                     },
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.add),
+                                    icon: Icon(Icons.add,color: Colors.white,),
                                     onPressed: ()async {
 
                                       // Set the selected song when Add is pressed

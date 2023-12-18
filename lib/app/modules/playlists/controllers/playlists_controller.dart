@@ -29,18 +29,19 @@ void showDeleteDialog(BuildContext context) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Delete'),
-                      content: Text('Are you sure to delete?'),
+                    return AlertDialog( backgroundColor:  Color.fromARGB(255, 228, 235, 192),
+                      title: Text('Delete', style: TextStyle(color: Colors.brown,fontWeight: FontWeight.bold)),
+                      content: Text('Are you sure to delete?', 
+                      style: TextStyle(color: Colors.brown,fontWeight: FontWeight.bold)),
                       actions: <Widget>[
                         TextButton(
-                          child: Text('Cancel'),
+                          child: Text('Cancel',style: TextStyle(color: Colors.brown)),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
                         ),
                         TextButton(
-                          child: Text('OK'),
+                          child: Text('OK',style: TextStyle(color: Colors.brown)),
                           onPressed: () {
                             deletePlaylist();
                             print('Deleting...');
@@ -70,14 +71,22 @@ void showDeleteDialog(BuildContext context) {
         String newPlaylistName = playlistName; // Default to current playlist name
 
         return AlertDialog(
-          title: Text('Rename Playlist'),
+           backgroundColor:  Color.fromARGB(255, 228, 235, 192),
+          title: Text('Rename Playlist', style: TextStyle(color: Colors.brown,fontWeight: FontWeight.bold)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 decoration: InputDecoration(
                   labelText: 'Playlist Name',
+
+                  labelStyle: TextStyle(color: Colors.brown),
+               focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: const Color.fromARGB(255, 237, 234, 233)),
+    ),
                 ),
+
+                
                 onChanged: (value) {
                   newPlaylistName = value;
                 },
@@ -86,13 +95,13 @@ void showDeleteDialog(BuildContext context) {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: Text('Cancel',style: TextStyle(color: Colors.brown)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: Text('OK',style: TextStyle(color: Colors.brown)),
               onPressed: () {
                 // Handle renaming logic here
                 renamePlaylist(newPlaylistName);

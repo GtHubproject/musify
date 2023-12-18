@@ -24,6 +24,7 @@ class FavouritesView extends GetView<FavouritesController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          backgroundColor:   Color.fromARGB(255, 63, 29, 29),
         title: Text('Favorite Songs'),
       ),
       body: _buildFavoritesList(),

@@ -30,6 +30,8 @@ class PlaylistDisplayView extends GetView<PlaylistDisplayController> {
     //  String playlistName = controller.playlistName ?? '';
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+         backgroundColor:   Color.fromARGB(255, 63, 29, 29),
         title: Text(playlistName),
         actions: [
           IconButton(
@@ -39,21 +41,21 @@ class PlaylistDisplayView extends GetView<PlaylistDisplayController> {
                   arguments: {'playlistName': controller.playlistName});
             },
           ),
-          PopupMenuButton(
+          PopupMenuButton(color:  const Color.fromARGB(255, 216, 209, 149),
             icon: Icon(Icons.more_vert),
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry>[
                 PopupMenuItem(
-                  child: ListTile(
-                    leading: Icon(Icons.edit),
-                    title: Text('Rename'),
+                  child: ListTile(tileColor:  const Color.fromARGB(255, 216, 209, 149),
+                    leading: Icon(Icons.edit,color: Colors.black),
+                    title: Text('Rename',style: TextStyle(color: Colors.black)),
                   ),
                   value: 'rename',
                 ),
                 PopupMenuItem(
-                  child: ListTile(
-                    leading: Icon(Icons.delete),
-                    title: Text('Delete'),
+                  child: ListTile(tileColor:  const Color.fromARGB(255, 216, 209, 149),
+                    leading: Icon(Icons.delete,color: Colors.black,),
+                    title: Text('Delete',style: TextStyle(color: Colors.black),),
                   ),
                   value: 'delete',
                 ),

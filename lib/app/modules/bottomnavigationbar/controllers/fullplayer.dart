@@ -12,8 +12,8 @@ class FullSongplayerController extends GetxController {
    RxBool _isShuffle = false.obs;
   bool get isShuffle => _isShuffle.value;
 
-RxBool _isRepeat = false.obs;
- bool get isRepeat => _isRepeat.value;
+  RxBool _isRepeat = false.obs;
+  bool get isRepeat => _isRepeat.value;
 
   SongModel? get currentSong => bottomController.currentSong.value;
 
@@ -30,6 +30,14 @@ RxBool _isRepeat = false.obs;
 
   void seekTo(double seconds) {
     bottomController.audioPlayer.seek(Duration(seconds: seconds.toInt()));
+  }
+//sleeek
+  double _progressValue = 0.0;
+  double get progressValue => _progressValue;
+//sleek
+  void setProgressValue(double value) {
+    _progressValue = value;
+    update();
   }
 
   void togglePlayPause() {

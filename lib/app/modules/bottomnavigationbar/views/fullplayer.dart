@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
-import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/bottomnavigationbar_controller.dart';
+
 import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/fullplayer.dart';
 import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
@@ -22,6 +20,7 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 63, 29, 29),
         title: Text('Now Playing'),
         centerTitle: true,
       ),
@@ -30,22 +29,24 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            QueryArtworkWidget(
-              controller: controller.trackController.audioQuery,
-              id: (controller.currentSong?.id) ?? 0,
-              type: ArtworkType.AUDIO,
-              artworkHeight: 250,
-              artworkWidth: 250,
-              nullArtworkWidget: Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(235, 131, 83, 76),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                width: 250,
-                height: 242,
-                child: Icon(
-                  Icons.music_note,
-                  size: 100,
+            Obx(
+              () => QueryArtworkWidget(
+                controller: controller.trackController.audioQuery,
+                id: (controller.currentSong?.id) ?? 0,
+                type: ArtworkType.AUDIO,
+                artworkHeight: 250,
+                artworkWidth: 250,
+                nullArtworkWidget: Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(235, 131, 83, 76),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  width: 250,
+                  height: 242,
+                  child: Icon(
+                    Icons.music_note,
+                    size: 100,
+                  ),
                 ),
               ),
             ),
@@ -83,37 +84,97 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
               ),
             ),
             SizedBox(height: 16),
-            Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-                //Obx(() =>
-                LinearProgressIndicator(
-                  value:
-                      (controller.audioPlayer.duration?.inMilliseconds ?? 0) > 0
-                          ? (controller.audioPlayer.position.inMilliseconds /
-                                  controller
-                                      .audioPlayer.duration!.inMilliseconds)
-                              .clamp(0.0, 1.0)
-                          : 0.0,
-                  minHeight: 8,
-                  backgroundColor: const Color.fromARGB(255, 35, 34, 34),
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      const Color.fromARGB(255, 202, 187, 140)),
-                ),
-                //),
-              ],
+            StreamBuilder<Duration?>(
+              stream: controller.bottomController.audioPlayer.durationStream,
+              builder: (context, snapshot) {
+                final totalDuration =
+                    snapshot.data?.inMilliseconds.toDouble() ?? 0.0;
+                return StreamBuilder<Duration>(
+                  stream:
+                      controller.bottomController.audioPlayer.positionStream,
+                  builder: (context, positionSnapshot) {
+                    final position = positionSnapshot.data ?? Duration.zero;
+                    double progressValue =
+                        controller.bottomController.audioPlayer.playing
+                            ? position.inMilliseconds / totalDuration
+                            : controller.progressValue;
+
+                    return Stack(
+                      alignment: Alignment.centerLeft,
+                      children: [
+                        LinearProgressIndicator(
+                          value: progressValue,
+                          minHeight: 8,
+                          backgroundColor:
+                              const Color.fromARGB(255, 35, 34, 34),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            const Color.fromARGB(255, 202, 187, 140),
+                          ),
+                        ),
+                        Positioned(
+                          left:
+                              progressValue * MediaQuery.of(context).size.width,
+                          child: GestureDetector(
+                            // Your draggable widget (e.g., a small round widget)
+                            child: Container(
+                              width: 8,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            onHorizontalDragUpdate: (details) {
+                              double dragPosition = details.globalPosition.dx;
+                              double dragPercentage = dragPosition /
+                                  MediaQuery.of(context).size.width;
+                              double newProgressValue =
+                                  dragPercentage.clamp(0.0, 1.0);
+                              int newPosition =
+                                  (totalDuration * newProgressValue).round();
+                              controller.seekTo(newPosition.toDouble());
+                              controller.setProgressValue(newProgressValue);
+                            },
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0, // Adjust the position as needed
+                          left: 0,
+                          right: 0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                controller.formatDuration(position),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Text(
+                                controller.formatDuration(Duration(
+                                    milliseconds: totalDuration.toInt())),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
             ),
             SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Obx(() => IconButton(
-                  icon: Icon(Icons.shuffle),
-                  color: controller.isShuffle ? Colors.amber : Colors.black,
-                  onPressed: () {
-                     controller.toggleShuffle();
-                  },
-                ),),
+                Obx(
+                  () => IconButton(
+                    icon: Icon(Icons.shuffle),
+                    color: controller.isShuffle ? Colors.amber : Colors.black,
+                    onPressed: () {
+                      controller.toggleShuffle();
+                    },
+                  ),
+                ),
                 IconButton(
                   icon: Icon(
                     controller.audioPlayer.playing
@@ -136,13 +197,15 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
                     controller.playNextSong();
                   },
                 ),
-               Obx(() =>  IconButton(
-                  icon: Icon(Icons.repeat),
-                  color: controller.isRepeat ? Colors.amber : Colors.black,
-                  onPressed: () {
-                   controller.toggleRepeat();
-                  },
-                ),)
+                Obx(
+                  () => IconButton(
+                    icon: Icon(Icons.repeat),
+                    color: controller.isRepeat ? Colors.amber : Colors.black,
+                    onPressed: () {
+                      controller.toggleRepeat();
+                    },
+                  ),
+                )
               ],
             ),
           ],
@@ -151,3 +214,42 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
     );
   }
 }
+
+//sleek
+// Custom SleekLinearProgressIndicator with buffer
+// class SleekLinearProgressIndicator extends StatelessWidget {
+//   final double value;
+//   final double bufferedValue;
+//   final double minHeight;
+//   final Color backgroundColor;
+//   final Animation<Color>? valueColor;
+
+//   SleekLinearProgressIndicator({
+//     required this.value,
+//     required this.bufferedValue,
+//     required this.minHeight,
+//     required this.backgroundColor,
+//     required this.valueColor,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Stack(
+//       alignment: Alignment.centerLeft,
+//       children: [
+//         LinearProgressIndicator(
+//           value: bufferedValue,
+//           minHeight: minHeight,
+//           backgroundColor: backgroundColor,
+//           valueColor: valueColor,
+//         ),
+//         LinearProgressIndicator(
+//           value: value,
+//           minHeight: minHeight,
+//           backgroundColor: Colors.transparent,
+//           valueColor: valueColor,
+//         ),
+//       ],
+//     );
+//   }
+// }

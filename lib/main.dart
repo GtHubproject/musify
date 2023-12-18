@@ -35,7 +35,7 @@ class AppBindings extends Bindings {
     Get.lazyPut<ArtistSongsController>(
         () => ArtistSongsController(Get.find<TrackController>()));
 
-   // Get.lazyPut<AlbumSongsController>( () => AlbumSongsController(Get.find<AlbumSongsController>()));
+ 
 
     Get.put<PlaylistNameSelectionController>(PlaylistNameSelectionController());
 
