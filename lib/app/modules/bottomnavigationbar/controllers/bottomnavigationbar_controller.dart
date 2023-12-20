@@ -9,6 +9,11 @@ class BottomnavigationbarController extends GetxController {
   Rx<SongModel?> currentSong = Rx<SongModel?>(null);
   List<SongModel> _songs = [];
 
+//previous
+  // List<SongModel> getSongs() {
+  //   return _songs;
+  // }
+
   void changeIndex(int index) {
     selectedIndex.value = index;
   }
@@ -71,6 +76,8 @@ class BottomnavigationbarController extends GetxController {
 
 
 
+
+
   void playNextSong() {
     if (currentSong.value != null) {
       int currentIndex =
@@ -87,6 +94,21 @@ class BottomnavigationbarController extends GetxController {
     }
   }
 
+ void playPreviousSong() {
+    if (currentSong.value != null) {
+      int currentIndex =
+          _songs.indexWhere((song) => song.id == currentSong.value!.id);
+
+      if (currentIndex > 0) {
+        // If the current song is not the first song in the list
+        playSong(_songs[currentIndex - 1]);
+      } else {
+        // If the current song is the first song, you can implement looping or any other logic
+        // For example, you can go to the last song:
+        playSong(_songs.last);
+      }
+    }
+  }
 
 
    // Update this method to play the selected song from a list

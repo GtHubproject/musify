@@ -63,6 +63,24 @@ class FullSongplayerController extends GetxController {
     update();
   }
 
+   void playPreviousSong() {
+    if (_isShuffle.value) {
+      // Shuffle the song list and play the previous shuffled song
+      bottomController.shuffleSongs();
+    } else if (_isRepeat.value) {
+      // If repeat is enabled, play the current song again
+      bottomController.playSong(currentSong!);
+    } else {
+      // Play the previous song in order
+      bottomController.playPreviousSong();
+    }
+    update();
+  }
+
+
+
+  
+
 
 
   void toggleShuffle() {

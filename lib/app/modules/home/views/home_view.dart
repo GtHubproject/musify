@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
@@ -22,6 +23,9 @@ class HomeView extends GetView<HomeController> {
       //backgroundColor: const Color.fromARGB(255, 19, 18, 18),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+
+         systemOverlayStyle:
+            const SystemUiOverlayStyle(statusBarColor: Colors.white),
         centerTitle: true,
         title: const Text(
           'MUSIFY',

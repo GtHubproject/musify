@@ -99,62 +99,75 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
                             ? position.inMilliseconds / totalDuration
                             : controller.progressValue;
 
-                    return Stack(
-                      alignment: Alignment.centerLeft,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        LinearProgressIndicator(
-                          value: progressValue,
-                          minHeight: 8,
-                          backgroundColor:
-                              const Color.fromARGB(255, 35, 34, 34),
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            const Color.fromARGB(255, 202, 187, 140),
-                          ),
-                        ),
-                        Positioned(
-                          left:
-                              progressValue * MediaQuery.of(context).size.width,
-                          child: GestureDetector(
-                            // Your draggable widget (e.g., a small round widget)
-                            child: Container(
-                              width: 8,
-                              height: 16,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
+                        Stack(
+                          alignment: Alignment.centerLeft,
+                          children: [
+                            //sleek
+                            LinearProgressIndicator(
+                              value: progressValue,
+                              minHeight: 14,
+                              backgroundColor:
+                                  const Color.fromARGB(255, 35, 34, 34),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                const Color.fromARGB(255, 202, 187, 140),
                               ),
                             ),
-                            onHorizontalDragUpdate: (details) {
-                              double dragPosition = details.globalPosition.dx;
-                              double dragPercentage = dragPosition /
-                                  MediaQuery.of(context).size.width;
-                              double newProgressValue =
-                                  dragPercentage.clamp(0.0, 1.0);
-                              int newPosition =
-                                  (totalDuration * newProgressValue).round();
-                              controller.seekTo(newPosition.toDouble());
-                              controller.setProgressValue(newProgressValue);
-                            },
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0, // Adjust the position as needed
-                          left: 0,
-                          right: 0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                controller.formatDuration(position),
-                                style: TextStyle(color: Colors.white),
+
+                            //for moving circle
+                            Positioned(
+                              left: progressValue *
+                                  MediaQuery.of(context).size.width,
+                              child: GestureDetector(
+                                // Your draggable widget (e.g., a small round widget)
+                                child: Container(
+                                  width: 8,
+                                  height: 25,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                onHorizontalDragUpdate: (details) {
+                                  double dragPosition =
+                                      details.globalPosition.dx;
+                                  double dragPercentage = dragPosition /
+                                      MediaQuery.of(context).size.width;
+                                  double newProgressValue =
+                                      dragPercentage.clamp(0.0, 1.0);
+                                  int newPosition =
+                                      (totalDuration * newProgressValue)
+                                          .round();
+                                  controller.seekTo(newPosition.toDouble());
+                                  controller.setProgressValue(newProgressValue);
+                                },
                               ),
-                              Text(
-                                controller.formatDuration(Duration(
-                                    milliseconds: totalDuration.toInt())),
-                                style: TextStyle(color: Colors.white),
+                            ),
+
+                            Positioned(
+                              top: 0,
+                              bottom: 0, // Adjust the position as needed
+                              left: 0,
+                              right: 0,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    controller.formatDuration(position),
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  Text(
+                                    controller.formatDuration(Duration(
+                                        milliseconds: totalDuration.toInt())),
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ],
                     );
@@ -174,6 +187,15 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
                       controller.toggleShuffle();
                     },
                   ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.skip_previous, // Add the icon for Previous Song
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    fullSongplayerController.playPreviousSong();
+                  },
                 ),
                 IconButton(
                   icon: Icon(
@@ -214,42 +236,3 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
     );
   }
 }
-
-//sleek
-// Custom SleekLinearProgressIndicator with buffer
-// class SleekLinearProgressIndicator extends StatelessWidget {
-//   final double value;
-//   final double bufferedValue;
-//   final double minHeight;
-//   final Color backgroundColor;
-//   final Animation<Color>? valueColor;
-
-//   SleekLinearProgressIndicator({
-//     required this.value,
-//     required this.bufferedValue,
-//     required this.minHeight,
-//     required this.backgroundColor,
-//     required this.valueColor,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Stack(
-//       alignment: Alignment.centerLeft,
-//       children: [
-//         LinearProgressIndicator(
-//           value: bufferedValue,
-//           minHeight: minHeight,
-//           backgroundColor: backgroundColor,
-//           valueColor: valueColor,
-//         ),
-//         LinearProgressIndicator(
-//           value: value,
-//           minHeight: minHeight,
-//           backgroundColor: Colors.transparent,
-//           valueColor: valueColor,
-//         ),
-//       ],
-//     );
-//   }
-// }
