@@ -9,10 +9,7 @@ class BottomnavigationbarController extends GetxController {
   Rx<SongModel?> currentSong = Rx<SongModel?>(null);
   List<SongModel> _songs = [];
 
-//previous
-  // List<SongModel> getSongs() {
-  //   return _songs;
-  // }
+
 
   void changeIndex(int index) {
     selectedIndex.value = index;
@@ -74,11 +71,7 @@ class BottomnavigationbarController extends GetxController {
     _songs = songs;
   }
 
-
-
-
-
-  void playNextSong() {
+void playNextSong() {
     if (currentSong.value != null) {
       int currentIndex =
           _songs.indexWhere((song) => song.id == currentSong.value!.id);

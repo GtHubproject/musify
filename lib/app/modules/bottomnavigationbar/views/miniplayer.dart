@@ -13,15 +13,13 @@ class MiniPlayer extends StatelessWidget {
     final BottomnavigationbarController bottomController = Get.find();
 
     final trackController = Get.find<TrackController>();
-    
-   // final currentSong = bottomController.currentSong.value;
 
     return GetBuilder<BottomnavigationbarController>(
       builder: (controller) {
         final currentSong = controller.currentSong.value; // Extract currentSong
 
         if (currentSong == null) {
-          // If no song is playing, return an empty container (or null)
+          
           return Container();
         }
 

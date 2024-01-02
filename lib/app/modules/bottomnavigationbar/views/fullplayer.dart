@@ -1,3 +1,4 @@
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +15,7 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
 
   final TrackController trackController = Get.put(TrackController());
 
-  double _progressValue = 0.0;
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+          children: [SizedBox(height:20),
             Obx(
               () => QueryArtworkWidget(
                 controller: controller.trackController.audioQuery,
@@ -84,155 +85,107 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
               ),
             ),
             SizedBox(height: 16),
-            StreamBuilder<Duration?>(
-              stream: controller.bottomController.audioPlayer.durationStream,
+            StreamBuilder(
+              stream: fullSongplayerController.audioPlayer.positionStream,
               builder: (context, snapshot) {
-                final totalDuration =
-                    snapshot.data?.inMilliseconds.toDouble() ?? 0.0;
-                return StreamBuilder<Duration>(
-                  stream:
-                      controller.bottomController.audioPlayer.positionStream,
-                  builder: (context, positionSnapshot) {
-                    final position = positionSnapshot.data ?? Duration.zero;
-                    double progressValue =
-                        controller.bottomController.audioPlayer.playing
-                            ? position.inMilliseconds / totalDuration
-                            : controller.progressValue;
+                final positionState = snapshot.data;
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Stack(
-                          alignment: Alignment.centerLeft,
-                          children: [
-                            //sleek
-                            LinearProgressIndicator(
-                              value: progressValue,
-                              minHeight: 14,
-                              backgroundColor:
-                                  const Color.fromARGB(255, 35, 34, 34),
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                const Color.fromARGB(255, 202, 187, 140),
-                              ),
-                            ),
-
-                            //for moving circle
-                            Positioned(
-                              left: progressValue *
-                                  MediaQuery.of(context).size.width,
-                              child: GestureDetector(
-                                // Your draggable widget (e.g., a small round widget)
-                                child: Container(
-                                  width: 8,
-                                  height: 25,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                onHorizontalDragUpdate: (details) {
-                                  double dragPosition =
-                                      details.globalPosition.dx;
-                                  double dragPercentage = dragPosition /
-                                      MediaQuery.of(context).size.width;
-                                  double newProgressValue =
-                                      dragPercentage.clamp(0.0, 1.0);
-                                  int newPosition =
-                                      (totalDuration * newProgressValue)
-                                          .round();
-                                  controller.seekTo(newPosition.toDouble());
-                                  controller.setProgressValue(newProgressValue);
-                                },
-                              ),
-                            ),
-
-                            Positioned(
-                              top: 0,
-                              bottom: 0, // Adjust the position as needed
-                              left: 0,
-                              right: 0,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    controller.formatDuration(position),
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  Text(
-                                    controller.formatDuration(Duration(
-                                        milliseconds: totalDuration.toInt())),
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  },
+                return ProgressBar(
+                  progress: positionState ?? Duration.zero,
+                  total:
+                      Duration(milliseconds: controller.currentSong!.duration!),
+                  progressBarColor: const Color.fromARGB(255, 219, 149, 144),
+                  baseBarColor: Colors.black,
+                  bufferedBarColor: Colors.white.withOpacity(0.24),
+                  thumbColor: Color.fromARGB(255, 71, 51, 51),
+                  barHeight: 3.0,
+                  thumbRadius: 8.0,
+                  onSeek: fullSongplayerController.audioPlayer.seek,
                 );
               },
             ),
             SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Obx(
-                  () => IconButton(
+            GetBuilder<FullSongplayerController>(builder: (context) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  //   Obx( () =>
+                  IconButton(
                     icon: Icon(Icons.shuffle),
                     color: controller.isShuffle ? Colors.amber : Colors.black,
                     onPressed: () {
                       controller.toggleShuffle();
                     },
                   ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.skip_previous, // Add the icon for Previous Song
-                    color: Colors.black,
+                  // ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.skip_previous, // Add the icon for Previous Song
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      fullSongplayerController.playPreviousSong();
+                    },
                   ),
-                  onPressed: () {
-                    fullSongplayerController.playPreviousSong();
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    controller.audioPlayer.playing
-                        ? Icons.pause
-                        : Icons.play_arrow,
-                    color: controller.audioPlayer.playing
-                        ? Color.fromARGB(255, 162, 144, 70)
-                        : const Color.fromARGB(255, 79, 25, 21),
+                 
+                  Container(
+                    width: 70.0, // Adjust the width and height as needed
+                    height: 70.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color.fromARGB(255, 192, 128, 125),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        controller.audioPlayer.playing
+                            ? Icons.pause
+                            : Icons.play_arrow,
+                        color: controller.audioPlayer.playing
+                            ? Color.fromARGB(255, 76, 26, 8)
+                            : const Color.fromARGB(255, 79, 25, 21),
+                             size: 32,
+                      ),
+                      onPressed: () {
+                        print("Play/Pause button pressed");
+                        controller.togglePlayPause();
+                      },
+                    ),
                   ),
-                  onPressed: () {
-                    controller.togglePlayPause();
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.skip_next,
-                    color: Colors.black,
+
+                  //),
+
+                  IconButton(
+                    icon: Icon(
+                      Icons.skip_next,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      controller.playNextSong();
+                    },
                   ),
-                  onPressed: () {
-                    controller.playNextSong();
-                  },
-                ),
-                Obx(
-                  () => IconButton(
+                 
+                  IconButton(
                     icon: Icon(Icons.repeat),
                     color: controller.isRepeat ? Colors.amber : Colors.black,
                     onPressed: () {
                       controller.toggleRepeat();
                     },
                   ),
-                )
-              ],
-            ),
+                  
+                ],
+              );
+            }),
           ],
         ),
       ),
     );
   }
+}
+
+class PositionState {
+  const PositionState(
+      {required this.position, required this.buffered, required this.total});
+  final Duration position;
+  final Duration buffered;
+  final Duration total;
 }

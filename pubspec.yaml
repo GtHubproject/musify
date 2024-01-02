@@ -15,7 +15,7 @@ dependencies:
   just_audio: ^0.9.36
   rxdart: ^0.27.7
   on_audio_query: ^2.9.0
-  permission_handler: ^11.0.1
+  permission_handler: 
   
 
   #hive 
@@ -32,6 +32,7 @@ dependencies:
   shared_preferences: ^2.2.2
   audio_video_progress_bar: ^2.0.1
   audio_service: ^0.18.12
+  percent_indicator: ^4.2.3
   
   
   

@@ -9,11 +9,12 @@ import 'package:musicplayer/app/common/widget.dart';
 
 import 'package:musicplayer/app/data/model/song_model.dart';
 import 'package:musicplayer/app/modules/home/views/recently_playedview.dart';
+import 'package:musicplayer/app/modules/home/widget/addnew_playlist.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  final HomeController controller = Get.find<HomeController>();
+ // final HomeController controller = Get.find<HomeController>();
   final TrackController trackController = Get.put(TrackController());
   HomeView({Key? key}) : super(key: key);
 
@@ -80,7 +81,9 @@ class HomeView extends GetView<HomeController> {
                     color: Color.fromARGB(255, 61, 21, 21),
                   ),
                   onPressed: () async {
-                    showCreatePlaylistDialog(context);
+
+                     await showCreatePlaylistDialog(context);
+                 //   showCreatePlaylistDialog(context);
                     // }
                   },
                 ),
@@ -192,52 +195,7 @@ class HomeView extends GetView<HomeController> {
     ); //future
   }
 
-  Future<void> showCreatePlaylistDialog(BuildContext context) async {
-    String playlistName = "";
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor:  Color.fromARGB(255, 228, 235, 192),
-          surfaceTintColor: const Color.fromARGB(255, 191, 16, 16),
-          title: Text("Create Playlist",style: TextStyle(color: Colors.brown,fontWeight: FontWeight.bold)),
-          content: TextField(
-            onChanged: (value) {
-              playlistName = value;
-            },
-            decoration: InputDecoration(
-              labelText: "Playlist Name",
-             // hintStyle: TextStyle(color: const Color.fromARGB(255, 230, 197, 197)),
-               labelStyle: TextStyle(color: Colors.brown),
-               focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: const Color.fromARGB(255, 237, 234, 233)),
-    ),
-    
-
-              ),
-              style:  TextStyle(color: const Color.fromARGB(255, 237, 234, 233)), // Text color while typing
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel',style: TextStyle(color: Colors.brown),),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (playlistName.isNotEmpty) {
-                  await controller.createPlaylist(playlistName);
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text('Create',style: TextStyle(color: Colors.brown)),
-            ),
-          ],
-        );
-      },
-    );
-  }
+ 
 
   Widget recentlyPlayedSongsWidget() {
     return FutureBuilder<void>(
