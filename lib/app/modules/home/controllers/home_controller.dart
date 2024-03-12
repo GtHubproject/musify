@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:musicplayer/app/data/model/song_model.dart';
-
-
 class HomeController extends GetxController {
+
   final musicBox = Hive.box<Music>('musicBox');
 
   // Function to create a playlist

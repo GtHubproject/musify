@@ -4,27 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:musicplayer/app/data/model/song_model.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-// class FavouritesController extends GetxController {
-//   //TODO: Implement FavouritesController
 
-//   final count = 0.obs;
-//   @override
-//   void onInit() {
-//     super.onInit();
-//   }
-
-//   @override
-//   void onReady() {
-//     super.onReady();
-//   }
-
-//   @override
-//   void onClose() {
-//     super.onClose();
-//   }
-
-//   void increment() => count.value++;
-// }
 class FavouritesController extends GetxController {
   //final ValueNotifier<int> boxChangeListener = ValueNotifier<int>(0);
 

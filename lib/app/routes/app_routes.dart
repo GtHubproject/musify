@@ -12,8 +12,6 @@ abstract class Routes {
   static const SEARCHBAR = _Paths.SEARCHBAR;
   static const PROFILE = _Paths.PROFILE;
   static const BOTTOMNAVIGATIONBAR = _Paths.BOTTOMNAVIGATIONBAR;
-  static const MUSICPLAYING = _Paths.MUSICPLAYING;
-  static const DOWNLOAD = _Paths.DOWNLOAD;
   static const PERMISSION = _Paths.PERMISSION;
   static const SELECTPLAYLIST = _Paths.SELECTPLAYLIST;
   static const NAMESELECTION = _Paths.NAMESELECTION;
@@ -33,8 +31,6 @@ abstract class _Paths {
   static const SEARCHBAR = '/searchbar';
   static const PROFILE = '/profile';
   static const BOTTOMNAVIGATIONBAR = '/bottomnavigationbar';
-  static const MUSICPLAYING = '/musicplaying';
-  static const DOWNLOAD = '/download';
   static const PERMISSION = '/permission';
   static const SELECTPLAYLIST = '/selectplaylist';
   static const NAMESELECTION = '/selectplaylistname';

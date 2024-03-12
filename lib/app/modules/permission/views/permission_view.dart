@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import 'package:permission_handler/permission_handler.dart';
 import '../controllers/permission_controller.dart';
 

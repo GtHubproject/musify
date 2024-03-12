@@ -10,7 +10,6 @@ import 'package:musicplayer/app/modules/library/views/library_view.dart';
 
 import 'package:musicplayer/app/modules/searchbar/views/searchbar_view.dart';
 
-
 import '../controllers/bottomnavigationbar_controller.dart';
 
 class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
@@ -61,10 +60,10 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
             ),
             child: Obx(
               () => BottomNavigationBar(
-               //  backgroundColor: const Color.fromARGB(255, 222, 220, 212),
-                backgroundColor:  const Color.fromARGB(255, 211, 196, 142),
+                //  backgroundColor: const Color.fromARGB(255, 222, 220, 212),
+                backgroundColor: const Color.fromARGB(255, 211, 196, 142),
                 type: BottomNavigationBarType.fixed,
-                selectedItemColor:  Color.fromARGB(255, 61, 21, 21),
+                selectedItemColor: Color.fromARGB(255, 61, 21, 21),
                 unselectedItemColor: Color.fromARGB(255, 252, 250, 250),
                 showSelectedLabels: true,
                 showUnselectedLabels: false,
@@ -75,19 +74,19 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
                 items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.home_outlined),
-                    label: 'Home',
+                    label: 'Home',   
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.search_outlined),
-                    label: 'Search',
+                    label: 'Search',    
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.library_music_outlined),
-                    label: 'Library',
+                    label: 'Library',   
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.favorite_border_outlined),
-                    label: 'favourites',
+                    label: 'favourites', 
                   ),
                 ],
               ),
@@ -98,5 +97,3 @@ class BottomnavigationbarView extends GetView<BottomnavigationbarController> {
     );
   }
 }
-
-

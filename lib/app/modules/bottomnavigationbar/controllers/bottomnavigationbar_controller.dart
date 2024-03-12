@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-//import 'package:audioplayers/audioplayers.dart';
+
 
 class BottomnavigationbarController extends GetxController {
   var selectedIndex = 0.obs;
@@ -9,13 +9,10 @@ class BottomnavigationbarController extends GetxController {
   Rx<SongModel?> currentSong = Rx<SongModel?>(null);
   List<SongModel> _songs = [];
 
-
-
-  void changeIndex(int index) {
+ void changeIndex(int index) {
     selectedIndex.value = index;
   }
-
-  @override
+   @override
   void onInit() {
     super.onInit();
     audioPlayer = AudioPlayer();
@@ -24,8 +21,6 @@ class BottomnavigationbarController extends GetxController {
     audioPlayer.positionStream.listen((position) {
       update();
     });
-    
-
     update();
   }
 
@@ -61,7 +56,7 @@ class BottomnavigationbarController extends GetxController {
     }
   }
 
-  void setCurrentSong(SongModel song) {
+   void setCurrentSong(SongModel song) {
     currentSong.value = song;
     update(); // Notify listeners
   }
@@ -102,9 +97,6 @@ void playNextSong() {
       }
     }
   }
-
-
-   // Update this method to play the selected song from a list
   // Update this method to play the selected song from a list
   void playSongFromList(SongModel selectedSong, List<SongModel> songList) {
     setCurrentSong(selectedSong);
@@ -138,6 +130,4 @@ void playNextSong() {
       print('Selected song not found in the provided list.');
     }
   }
-
-
 }

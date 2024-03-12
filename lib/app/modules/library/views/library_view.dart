@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:musicplayer/app/modules/library/views/album_view.dart';
+
 import 'package:musicplayer/app/modules/library/views/artist_view.dart';
 import 'package:musicplayer/app/modules/library/views/tracks_view.dart';
 import '../controllers/library_controller.dart';
@@ -31,7 +31,7 @@ class LibraryView extends GetView<LibraryController> {
           children: [
             _buildTracks(), // Using the TracksView widget
             _buildArtists(), // Using the ArtistsView widget
-           // _buildAlbums(), // Using the AlbumsView widget
+         
           ],
         ),
       ),

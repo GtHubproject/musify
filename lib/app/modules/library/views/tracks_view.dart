@@ -56,14 +56,12 @@ class _TracksViewState extends State<TracksView> {
   }
 
 //for addin playlist
- Future<void> addToPlaylist(SongModel selectedSong) async {
+  Future<void> addToPlaylist(SongModel selectedSong) async {
     // Navigate to the playlist selection screen
     await Get.to(() => PlaylistNameSelectionView());
 
     // The PlaylistNameSelectionController will handle adding the song to the selected playlist
   }
-
-
 
   Widget _buildTrackList() {
     return FutureBuilder<List<SongModel>>(
@@ -111,34 +109,35 @@ class _TracksViewState extends State<TracksView> {
                         showModalBottomSheet(
                           context: context,
                           builder: (BuildContext context) {
-                            return Container(color: const Color.fromARGB(255, 216, 209, 149),
+                            return Container(
+                              color: const Color.fromARGB(255, 216, 209, 149),
                               padding: EdgeInsets.all(16.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   IconButton(
-                                    icon: Icon(Icons.favorite,color: Colors.white),
+                                    icon: Icon(Icons.favorite,
+                                        color: Colors.white),
                                     onPressed: () {
                                       // Call the addToFavorites method from the TracksController
                                       trackController.addToFavorites(song);
                                       // Notify the FavouritesController to trigger a rebuild
                                       Get.find<FavouritesController>().update();
-                                      // final controller = Get.find<TrackController>();
+                                     
                                       // Add the current song to favorites
-                                      //controller.addToFavorites(song);
-
                                       Navigator.pop(
-
                                           context); // Close the bottom sheet
                                     },
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.add,color: Colors.white,),
-                                    onPressed: ()async {
-
+                                    icon: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () async {
                                       // Set the selected song when Add is pressed
-                             trackController.selectedSong = song;
+                                      trackController.selectedSong = song;
                                       await addToPlaylist(_songs[index]);
                                       Navigator.pop(context);
 
@@ -154,16 +153,12 @@ class _TracksViewState extends State<TracksView> {
                     ),
                   ],
                 ),
-                onTap: () async{
-                   if (_songs.isEmpty) {
-                  await loadSongs();
-                }
+                onTap: () async {
+                  if (_songs.isEmpty) {
+                    await loadSongs();
+                  }
 
-
-                 bottomnavigationbarController.playSongFromList(song, _songs);
-                  //   _showBottomMediaBar(_songs[index]);
-
-                  // bottomnavigationbarController.playSong(_songs[index]);
+                  bottomnavigationbarController.playSongFromList(song, _songs);
                   bottomnavigationbarController.update();
                   trackController.addRecentlyPlayed(_songs[index]);
                 },
@@ -181,6 +176,7 @@ class _TracksViewState extends State<TracksView> {
     // Logic to get or initialize the selected song
     return song;
   }
+
   Widget noAccessToLibraryWidget() {
     return Center(
       child: Column(

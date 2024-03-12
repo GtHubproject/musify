@@ -17,7 +17,7 @@ class PlaylistSelectionView extends GetView<PlaylistSelectionController> {
         title: Text('Select Songs'),
       ),
       body: _buildSongList(controller.musicBox),
-      // bottomNavigationBar: _buildBottomNavigationBar(),
+     
     );
   }
 

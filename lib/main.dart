@@ -9,7 +9,6 @@ import 'package:musicplayer/app/modules/bottomnavigationbar/controllers/fullplay
 import 'package:musicplayer/app/modules/favourites/controllers/favourites_controller.dart';
 import 'package:musicplayer/app/modules/home/controllers/home_controller.dart';
 import 'package:musicplayer/app/modules/library/controllers/PlaylistNameSelectionController.dart';
-
 import 'package:musicplayer/app/modules/library/controllers/artistandsongcontroller.dart';
 import 'package:musicplayer/app/modules/library/controllers/tracks_controller.dart';
 import 'package:musicplayer/app/modules/playlists/controllers/playlist_selection_controller_controller.dart';

@@ -9,9 +9,13 @@ class RecentlyPlayedScreen extends StatelessWidget {
   BottomnavigationbarController bottomnavigationbarController =
       Get.put(BottomnavigationbarController());
 
+
+
+
   @override
   Widget build(BuildContext context) {
     final trackController = Get.find<TrackController>();
+
     final recentlyPlayed = trackController.recentlyPlayedBox
         .get('recently_played', defaultValue: Music(songs: []))!;
 
@@ -37,13 +41,13 @@ class RecentlyPlayedScreen extends StatelessWidget {
                     onTap: () {
                     
                      bottomnavigationbarController.playSongFromList(song, recentlyPlayed.songs);
-
-                     // bottomnavigationbarController.playSong(song);
                     }
                     );
               },
             )
           : Center(child: Text("Waiting For Making a \nDecent Recent Collection",style: TextStyle(color: const Color.fromARGB(255, 176, 150, 71),fontSize: 18,fontWeight: FontWeight.bold),)),
     );
+
+    
   }
 }

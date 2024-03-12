@@ -68,11 +68,13 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
                       color: const Color.fromARGB(255, 25, 24, 24),
                     )),
                 Obx(
-                  () => Text(
-                    controller.currentSong?.title ?? '',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                  () => Flexible(
+                    child: Text(
+                      controller.currentSong?.title ?? '',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 )
@@ -109,7 +111,7 @@ class FullSongplayerView extends GetView<FullSongplayerController> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  //   Obx( () =>
+                  
                   IconButton(
                     icon: Icon(Icons.shuffle),
                     color: controller.isShuffle ? Colors.amber : Colors.black,

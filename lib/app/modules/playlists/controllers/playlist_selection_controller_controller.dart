@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:musicplayer/app/data/model/box.dart';
+
 import 'package:musicplayer/app/data/model/song_model.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 

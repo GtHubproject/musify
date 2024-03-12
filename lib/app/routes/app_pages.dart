@@ -12,20 +12,17 @@ import '../modules/download/bindings/download_binding.dart';
 import '../modules/download/views/download_view.dart';
 import '../modules/favourites/bindings/favourites_binding.dart';
 import '../modules/favourites/views/favourites_view.dart';
-import '../modules/folder/bindings/folder_binding.dart';
-import '../modules/folder/views/folder_view.dart';
+
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/library/bindings/library_binding.dart';
 import '../modules/library/views/library_view.dart';
-import '../modules/musicplaying/bindings/musicplaying_binding.dart';
-import '../modules/musicplaying/views/musicplaying_view.dart';
+
 import '../modules/permission/bindings/permission_binding.dart';
 import '../modules/permission/views/permission_view.dart';
 import '../modules/playlists/bindings/playlists_binding.dart';
 
-import '../modules/profile/bindings/profile_binding.dart';
-import '../modules/profile/views/profile_view.dart';
+
 import '../modules/searchbar/bindings/searchbar_binding.dart';
 import '../modules/searchbar/views/searchbar_view.dart';
 import '../modules/splash/splashscreen.dart';
@@ -53,11 +50,7 @@ class AppPages {
       page: () => const LibraryView(),
       binding: LibraryBinding(),
     ),
-    GetPage(
-      name: _Paths.FOLDER,
-      page: () => FolderView(),
-      binding: FolderBinding(),
-    ),
+   
     GetPage(
       name: _Paths.FAVOURITES,
       page: () => FavouritesView(),
@@ -85,26 +78,13 @@ class AppPages {
       page: () => SearchbarView(),
       binding: SearchbarBinding(),
     ),
-    GetPage(
-      name: _Paths.PROFILE,
-      page: () => const ProfileView(),
-      binding: ProfileBinding(),
-    ),
+
     GetPage(
       name: _Paths.BOTTOMNAVIGATIONBAR,
       page: () => BottomnavigationbarView(),
       binding: BottomnavigationbarBinding(),
     ),
-    GetPage(
-      name: _Paths.MUSICPLAYING,
-      page: () => MusicplayingView(),
-      binding: MusicplayingBinding(),
-    ),
-    GetPage(
-      name: _Paths.DOWNLOAD,
-      page: () => DownloadView(),
-      binding: DownloadBinding(),
-    ),
+   
     GetPage(
       name: _Paths.PERMISSION,
       page: () => const PermissionView(),
@@ -124,7 +104,7 @@ class AppPages {
     ),
     
      GetPage(
-      name: _Paths.ARTISTSONG,
+      name: _Paths.ALBUMSONG,
       page: () => AlbumSongsScreen(),
       
      )

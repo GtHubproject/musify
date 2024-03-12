@@ -12,18 +12,15 @@ class PlaylistDisplayController extends GetxController {
   void onInit() {
     // Retrieve the selected playlist name from the navigation arguments
     playlistName = Get.arguments['playlistName'];
-
-    super.onInit();
+  super.onInit();
   }
-
-  //to remove song in a playlist
+//to remove song in a playlist
    void removeSongFromPlaylist(SongModel song) {
     // Remove the song from the playlist and update the Hive box
     Music playlist = musicBox.get(playlistName) ?? Music(songs: []);
     playlist.songs.remove(song);
     musicBox.put(playlistName, playlist);
   }
-
 //to delete a palylist
 void showDeleteDialog(BuildContext context) {
                 showDialog(
@@ -61,9 +58,7 @@ void showDeleteDialog(BuildContext context) {
     // Navigate back to the previous screen or perform any other necessary actions
     Get.back();
   }
-
-
-  //to rename playlist
+//to rename playlist
    void showRenameDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -85,9 +80,7 @@ void showDeleteDialog(BuildContext context) {
       borderSide: BorderSide(color: const Color.fromARGB(255, 237, 234, 233)),
     ),
                 ),
-
-                
-                onChanged: (value) {
+onChanged: (value) {
                   newPlaylistName = value;
                 },
               ),
@@ -113,11 +106,8 @@ void showDeleteDialog(BuildContext context) {
       },
     );
   }
-
-
-  //rename fn
-
-  void renamePlaylist(String newName) {
+//rename fn
+void renamePlaylist(String newName) {
     // Implement logic to rename the playlist
     Music playlist = musicBox.get(playlistName) ?? Music(songs: []);
     musicBox.delete(playlistName);

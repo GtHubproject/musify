@@ -12,6 +12,11 @@ import 'package:permission_handler/permission_handler.dart';
 class TrackController extends GetxController {
   final OnAudioQuery audioQuery = OnAudioQuery();
   final AudioPlayer audioPlayer = AudioPlayer();
+  
+  //to recent screen automatically updating
+
+ Rx<Music> recentlyPlayedSongs = Music(songs: []).obs;
+
 
   late Box<Music> favoritesBox;
   late ValueNotifier<int> boxChangeListener;
@@ -20,9 +25,6 @@ class TrackController extends GetxController {
   late final Box<Music> recentlyPlayedBox;
   final int maxRecentlyPlayed =
       10; // Adjust the number of recently played songs to store
-
-
-  // Hive box for storing favorite songs
 
 //for  adding song into playlists  from tracks
   SongModel? selectedSong;
@@ -38,7 +40,7 @@ class TrackController extends GetxController {
     // Initialize the Hive box for recently played songs
     await Hive.openBox<Music>('recently_played');
     recentlyPlayedBox = Hive.box<Music>('recently_played');
-
+    loadRecentlyPlayed();
     //Create the ValueNotifier and pass it to the FavoritesScreen
     boxChangeListener = ValueNotifier<int>(0);
   }
@@ -66,61 +68,33 @@ class TrackController extends GetxController {
     );
   }
 
-  // Method to add a song to the favorites Hive box
-  // void addToFavorites(SongModel song) {
-  //   try {
-  //     // Get the existing favorites or create a new one
-  //     Music favorites =
-  //         favoritesBox.get('favorites', defaultValue: Music(songs: []))!;
-
-  //     // Add the song to the favorites
-  //     favorites.songs.add(song);
-
-  //     // Save the updated favorites back to the Hive box
-  //     favoritesBox.put('favorites', favorites);
-  //     update();
-
-  //     // Trigger a rebuild in the FavoritesScreen
-
-  //     boxChangeListener.value++;
-  //     print("added");
-
-  //   }
-  //    catch (e) {
-      
-  //     print('Error adding song to favorites: $e');
-  //     }
-  // }
-
-
   void addToFavorites(SongModel song) {
-  try {
-    Music favorites = favoritesBox.get('favorites', defaultValue: Music(songs: []))!;
-    print("Existing favorites: ${favorites.songs}");
+    try {
+      Music favorites =
+          favoritesBox.get('favorites', defaultValue: Music(songs: []))!;
+      print("Existing favorites: ${favorites.songs}");
 
-    if (!favorites.songs.contains(song)) {
-      favorites.songs.add(song);
-      print("Song added: ${song.title}");
+      if (!favorites.songs.contains(song)) {
+        favorites.songs.add(song);
+        print("Song added: ${song.title}");
 
-      favoritesBox.put('favorites', favorites);
-      update();
-      boxChangeListener.value++;
-      print("Favorites after update: ${favoritesBox.get('favorites')}");
-    } else {
-      print("Song is already in favorites");
+        favoritesBox.put('favorites', favorites);
+        update();
+        boxChangeListener.value++;
+        print("Favorites after update: ${favoritesBox.get('favorites')}");
+      } else {
+        print("Song is already in favorites");
+      }
+    } catch (e) {
+      print('Error adding song to favorites: $e');
     }
-  } catch (e) {
-    print('Error adding song to favorites: $e');
   }
-}
 
   Future<void> playSong(SongModel song) async {
     await audioPlayer.stop();
     await audioPlayer.setUrl(song.data);
     await audioPlayer.play();
   }
-
-
 
   Future<void> addRecentlyPlayed(SongModel song) async {
     try {

@@ -1,5 +1,5 @@
 name: musicplayer
-version: 1.0.0+1
+version: 1.0.0+2
 publish_to: none
 description: A new Flutter project.
 environment: 
@@ -17,7 +17,6 @@ dependencies:
   on_audio_query: ^2.9.0
   permission_handler: 
   
-
   #hive 
   hive: ^2.2.3
   hive_flutter: ^1.1.0
@@ -32,13 +31,11 @@ dependencies:
   shared_preferences: ^2.2.2
   audio_video_progress_bar: ^2.0.1
   audio_service: ^0.18.12
-  percent_indicator: ^4.2.3
+  carousel_slider: ^4.2.1
+ 
   
   
   
-  
-  
-
 dev_dependencies: 
   flutter_lints: ^2.0.0
   flutter_test: 
